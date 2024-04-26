@@ -1,17 +1,25 @@
 import { Router } from 'express';
 
+const users_router = Router();
 const user_router = Router();
 
-user_router.post('/', function (req, res) {
-    res.send('Create user');
+users_router.post('/login', function (req, res) {
+    res.send('Login a user');
+});
+
+users_router.post('/', function (req, res) {
+    res.send('Create a user');
 });
 
 user_router.get('/', function (req, res) {
-    res.send('Read user');
+    res.send('Read a user');
 });
 
 user_router.put('/', function (req, res) {
-    res.send('Edit user');
+    res.send('Edit a user');
 });
 
-export default user_router;
+export {
+    users_router,
+    user_router
+};

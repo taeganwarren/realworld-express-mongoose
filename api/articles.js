@@ -1,21 +1,29 @@
 import { Router } from 'express';
 
-const article_router = Router();
+const articles_router = Router();
 
-article_router.post('/', function (req, res) {
-    res.send('Create article');
+articles_router.get('/feed', function (req, res) {
+    res.send('Get most recent articles from users you follow.');
 });
 
-article_router.get('/', function (req, res) {
-    res.send('Read article');
+articles_router.get('/', function (req, res) {
+    res.send('Get most recent articles globally.');
 });
 
-article_router.put('/', function (req, res) {
-    res.send('Edit article');
+articles_router.post('/', function (req, res) {
+    res.send('Create an article.');
 });
 
-article_router.delete('/', function (req, res) {
-    res.send('Delete article');
+articles_router.get('/:slug', function (req, res) {
+    res.send('Get an article.');
 });
 
-export default article_router;
+articles_router.put('/:slug', function (req, res) {
+    res.send('Update an article.');
+});
+
+articles_router.get('/:slug', function (req, res) {
+    res.send('Delete an article.');
+});
+
+export default articles_router;
