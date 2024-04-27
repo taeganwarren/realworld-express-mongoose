@@ -8,7 +8,8 @@ app.use(v1_router);
 
 connectToDatabase().then(() => {
     app.listen(PORT, () => {
-        console.log(`Example app listening on port: ${PORT}`);
+        // TODO: Seperate this into a logger
+        if (process.env.NODE_ENV == 'development') console.log(`Example app listening on port: ${PORT}`);
     });
 });
 
