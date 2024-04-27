@@ -1,6 +1,6 @@
 import express from 'express';
 import connectToDatabase from './utils/mongodb.js';
-import v1_router from './api/v1/routes/router.js';
+import v1_router from './api/routes/router.js';
 const PORT = process.env.PORT || 3000;
 
 const app = express();
@@ -11,3 +11,5 @@ connectToDatabase().then(() => {
         console.log(`Example app listening on port: ${PORT}`);
     });
 });
+
+export default app;
