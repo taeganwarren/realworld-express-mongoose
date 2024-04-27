@@ -1,7 +1,17 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
-async function connect_to_db() {
-    await mongoose.connect(`mongodb://${process.env.MONGO_HOST}:${process.env.MONGO_PORT}`);
+const MONGO_HOST = process.env.MONGO_HOST || "localhost";
+const MONGO_PORT = process.env.MONGO_PORT || 27017;
+
+function connectToDatabase() {
+    return mongoose.connect(`mongodb://${MONGO_HOST}:${MONGO_PORT}`)
+        .then(() => {
+            console.log(`Connected to MongoDB Database at: ${MONGO_HOST}:${MONGO_PORT}`);
+        })
+        .catch((err) => {
+            console.error(err);
+            process.exit(1);
+        });
 }
 
-export default connect_to_db;
+export default connectToDatabase;
