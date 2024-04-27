@@ -4,24 +4,24 @@ import server from '../server.js';
 
 const chai = use(chaiHttp);
 
-describe('User routes', () => {
+describe('Users routes', () => {
     describe('/POST /api/users/login', () => {
-        it('it should login an existing user', (done) => {
+        it('Login for existing user', (done) => {
             done();
         });
     });
     describe('/POST /api/users', () => {
-        it('it should create a new user', (done) => {
+        it('Register a new user', (done) => {
             done();
         });
     });
     describe('/GET /api/user', () => {
-        it('it should get the current user', (done) => {
+        it('Gets the currently logged-in user', (done) => {
             done();
         });
     });
     describe('/PUT /api/user', () => {
-        it('it should edit the current user', (done) => {
+        it('Updated user information for current user', (done) => {
             done();
         });
     });
