@@ -13,16 +13,13 @@ const userSchema = new Schema({
     favorites: [{ type: Schema.Types.ObjectId, ref: 'Article' }],
 });
 
-userSchema.methods.format_new_user = function() {
+userSchema.methods.format_user_response = function() {
     return {
         username: this.username,
         token: this.generate_jwt(),
         email: this.email,
         bio: this.bio,
-        image: this.image,
-        articles: this.articles,
-        comments: this.comments,
-        favorites: this.favorites,
+        image: this.image
     };
 };
 

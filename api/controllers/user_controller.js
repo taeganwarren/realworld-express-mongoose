@@ -9,19 +9,24 @@ async function create_user(email, username, password) {
         password: hash
     });
     await new_user.save();
-    return new_user.format_new_user();
+    return new_user.format_user_response();
 }
 
-async function get_current_user() {
-    console.log('user controller');
+async function get_user(email, password) {
+    const existing_user = await User.findOne({ email: email }, 'email username password bio image').exec();
+    const error_response = { "errors": { "body": ["Invalid email or password"] } };
+    if (!existing_user || !(await bcrypt.compare(password, existing_user.password))) {
+        return error_response;
+    }
+    return existing_user.format_user_response();
 }
 
-async function update_current_user() {
+async function update_user() {
     console.log('user controller');
 }
 
 export { 
     create_user,
-    get_current_user,
-    update_current_user
+    get_user,
+    update_user
 }

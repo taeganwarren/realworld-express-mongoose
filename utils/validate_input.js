@@ -21,7 +21,7 @@ function validate_field(value, validate_func, error_msg, errors) {
     }
 }
 
-function validate_new_user(body) {
+function validate_new_user_input(body) {
     const errors = { "errors": { "body": [] } };
     if (!body.user) {
         errors.errors.body.push(ERROR_MESSAGES.email, ERROR_MESSAGES.username, ERROR_MESSAGES.password);
@@ -33,6 +33,18 @@ function validate_new_user(body) {
     return errors;
 }
 
+function validate_existing_user_input(body) {
+    const errors = { "errors": { "body": [] } };
+    if (!body.user) {
+        errors.errors.body.push(ERROR_MESSAGES.email, ERROR_MESSAGES.password);
+    } else {
+        validate_field(body.user.email, validator.isEmail, ERROR_MESSAGES.email, errors);
+        validate_field(body.user.password, (password) => password.length >= 10 && password.length <= 100 && validator.isAscii(password), ERROR_MESSAGES.password, errors);
+    }
+    return errors;
+}
+
 export {
-    validate_new_user
+    validate_new_user_input,
+    validate_existing_user_input
 };
