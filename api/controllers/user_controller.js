@@ -1,4 +1,4 @@
-import bcrypt, { hash } from 'bcrypt';
+import bcrypt from 'bcrypt';
 import User from "../models/User.js";
 
 async function create_user(email, username, password) {
@@ -9,8 +9,7 @@ async function create_user(email, username, password) {
         password: hash
     });
     await new_user.save();
-    // TODO: return user without password
-    return new_user;
+    return new_user.format_new_user();
 }
 
 async function get_current_user() {
