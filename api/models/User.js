@@ -15,11 +15,13 @@ const userSchema = new Schema({
 
 userSchema.methods.format_user_response = function() {
     return {
-        username: this.username,
-        token: this.generate_jwt(),
-        email: this.email,
-        bio: this.bio,
-        image: this.image
+        user: {
+            username: this.username,
+            token: this.generate_jwt(),
+            email: this.email,
+            bio: this.bio,
+            image: this.image
+        }
     };
 };
 

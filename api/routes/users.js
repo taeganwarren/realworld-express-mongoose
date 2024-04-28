@@ -4,15 +4,11 @@ import {
     get_user,
     update_user
 } from '../controllers/user_controller.js';
-import { validate_new_user_input, validate_existing_user_input } from '../../utils/validate_input.js';
+import validate_user_input from '../middlewares/validate_input.js';
 
 const users_router = Router();
 
-users_router.post('/users/login', (req, res) => {
-    const errors = validate_existing_user_input(req.body);
-    if (errors.errors.body.length > 0) {
-        return res.status(422).json(errors);
-    }
+users_router.post('/users/login', validate_user_input({fields: ['email', 'password']}), (req, res) => {
     const { email, password } = req.body.user;
     get_user(email, password)
         .then((existing_user) => {
@@ -26,11 +22,7 @@ users_router.post('/users/login', (req, res) => {
         });
 });
 
-users_router.post('/users', (req, res) => {
-    const errors = validate_new_user_input(req.body);
-    if (errors.errors.body.length > 0) {
-        return res.status(422).json(errors);
-    }
+users_router.post('/users', validate_user_input({fields: ['username', 'email', 'password']}), (req, res) => {
     const { email, username, password } = req.body.user;
     create_user(email, username, password)
         .then((new_user) => {
