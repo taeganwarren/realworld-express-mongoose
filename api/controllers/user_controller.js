@@ -15,18 +15,18 @@ async function create_user(email, username, password) {
         await new_user.save();
     } catch (err) {
         // TODO: reformat error messages to fit real world spec
-        return { "errors": err };
+        return { errors: err };
     }
     return new_user.format_user_response();
 }
 
 async function get_user(email, password) {
     if (!validator.isEmail(email)) {
-        return { "errors": { "body": ["Email must be a valid email address"] } };
+        return { errors: { body: ["Email must be a valid email address"] } };
     }
     const existing_user = await User.findOne({ email: email }, 'email username password bio image').exec();
     if (!existing_user || !(await bcrypt.compare(password, existing_user.password))) {
-        return { "errors": { "body": ["Invalid email or password"] } };
+        return { errors: { body: ["Invalid email or password"] } };
     }
     return existing_user.format_user_response();
 }

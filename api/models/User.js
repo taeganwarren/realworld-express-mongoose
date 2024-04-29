@@ -72,11 +72,11 @@ userSchema.methods.format_user_response = function() {
 
 userSchema.methods.generate_jwt = function() {
     return jwt.sign({
-        'user': {
-            'id': this._id,
-            'email': this.email,
-            'username': this.username,
-            'password': this.password,
+        user: {
+            id: this._id,
+            email: this.email,
+            username: this.username,
+            password: this.password,
         }}, process.env.JWT_SECRET_KEY);
 };
 
