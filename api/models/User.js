@@ -7,21 +7,12 @@ const userSchema = new Schema({
     email: {
         type: String,
         required: true,
-        validate: [
-            {
-                validator: (email) => {
-                    return validator.isEmail(email);
-                },
-                message: 'Email must be a valid email address'
-            }, {
-                validator: async (email) => {
-                    if (await User.findOne({ email: email })) {
-                        return false;
-                    }
-                },
-                message: 'Email already exists'
-            }
-        ]
+        validate: {
+            validator: (email) => {
+                return validator.isEmail(email);
+            },
+            message: 'Email must be a valid email address'
+        }
     }, 
     username: {
         type: String,
@@ -77,6 +68,13 @@ userSchema.methods.generate_jwt = function() {
             password: this.password,
         }}, process.env.JWT_SECRET_KEY);
 };
+
+userSchema.methods.check_user_exists = async function() {
+    if (await User.findOne({ email: this.email })) {
+        return false;
+    }
+    return true;
+}
 
 const User = model('User', userSchema);
 

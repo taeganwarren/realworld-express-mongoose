@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt';
-import validator from 'validator';
 import User from "../models/User.js";
+import { format_errors } from '../../utils/helpers.js';
 
 async function create_user(email, username, password) {
     const hash = await bcrypt.hash(password, 10);
@@ -13,25 +13,27 @@ async function create_user(email, username, password) {
         await new_user.validate(['email', 'username', 'password']);
         new_user.password = hash;
         await new_user.save();
+        return new_user.format_user_response();
     } catch (err) {
-        const validation_errors = { errors: { body: [] } };
-        for (const error in err.errors) {
-            validation_errors.errors.body.push(err.errors[error].message);
-        }
-        return validation_errors;
+        return format_errors(err);
     }
-    return new_user.format_user_response();
 }
 
 async function get_user(email, password) {
-    if (!validator.isEmail(email)) {
-        return { errors: { body: ["Email must be a valid email address"] } };
+    const user_input = new User({
+        email: email,
+        password: password
+    });
+    try {
+        await user_input.validate(['email', 'password']);
+        const existing_user = await User.findOne({ email: email }, 'email username password bio image').exec();
+        if (!existing_user || !(await bcrypt.compare(password, existing_user.password))) {
+            return { errors: { body: ["Invalid email or password"] } };
+        }
+        return existing_user.format_user_response();
+    } catch (err) {
+        return format_errors(err);
     }
-    const existing_user = await User.findOne({ email: email }, 'email username password bio image').exec();
-    if (!existing_user || !(await bcrypt.compare(password, existing_user.password))) {
-        return { errors: { body: ["Invalid email or password"] } };
-    }
-    return existing_user.format_user_response();
 }
 
 async function update_user() {
@@ -42,4 +44,4 @@ export {
     create_user,
     get_user,
     update_user
-}
+};
