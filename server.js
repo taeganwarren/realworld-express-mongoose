@@ -1,7 +1,7 @@
 import express from 'express';
 import connectToDatabase from './utils/mongodb.js';
 import v1_router from './api/routes/router.js';
-const PORT = process.env.API_PORT;
+const PORT = process.env.API_PORT || 3000;
 
 const app = express();
 app.use(express.json());
