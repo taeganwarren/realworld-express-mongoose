@@ -4,25 +4,19 @@ import app from '../server.js';
 
 const chai = use(chaiHttp);
 
-describe('Users routes', () => {
-    describe('/POST /api/users/login', () => {
-        it('Login for existing user', (done) => {
-            done();
-        });
-    });
-    describe('/POST /api/users', () => {
-        it('Register a new user', (done) => {
-            done();
-        });
-    });
-    describe('/GET /api/user', () => {
-        it('Gets the currently logged-in user', (done) => {
-            done();
-        });
-    });
-    describe('/PUT /api/user', () => {
-        it('Updated user information for current user', (done) => {
-            done();
-        });
-    });
-});
+// describe('Users routes', () => {
+//     describe('/POST /api/users', () => {
+//         it('Register a new user', (done) => {
+//             var requester = chai.request(app).keepOpen()
+//             Promise.all([
+//                 requester.post('/api/users'),
+//                 requester.get('/b'),
+//             ])
+//             .then(responses => {
+//                 expect(responses[0]).to.have.status(200)
+//                 expect(responses[1]).to.have.status(200)
+//             })
+//             .then(() => requester.close())
+//         });
+//     });
+// });

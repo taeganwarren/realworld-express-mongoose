@@ -1,13 +1,13 @@
-import { use, expect } from 'chai';
-import chaiHttp from 'chai-http';
-import app from '../server.js';
+// import { use, expect } from 'chai';
+// import chaiHttp from 'chai-http';
+// import app from '../server.js';
 
-const chai = use(chaiHttp);
+// const chai = use(chaiHttp);
 
-describe('Tags routes', () => {
-    describe('/GET /api/tags', () => {
-        it('Get tags', (done) => {
-            done();
-        });
-    });
-});
+// describe('Tags routes', () => {
+//     describe('/GET /api/tags', () => {
+//         it('Get tags', (done) => {
+//             done();
+//         });
+//     });
+// });
