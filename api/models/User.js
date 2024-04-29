@@ -71,9 +71,9 @@ userSchema.methods.generate_jwt = function() {
 
 userSchema.methods.check_user_exists = async function() {
     if (await User.findOne({ email: this.email })) {
-        return false;
+        return true;
     }
-    return true;
+    return false;
 }
 
 const User = model('User', userSchema);

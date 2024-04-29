@@ -19,7 +19,7 @@ users_router.post('/users/login', check_input({ fields: ['email', 'password'] })
             return res.status(200).json(existing_user);
         })
         .catch((err) => {
-            return res.status(500).json({ message: 'Internal server error' });
+            return res.status(500).json({ errors: { body: ['Internal server error'] } });
         });
 });
 
@@ -32,7 +32,7 @@ users_router.post('/users', check_input({ fields: ['username', 'email', 'passwor
             return res.status(201).json(new_user);
         })
         .catch((err) => {
-            return res.status(500).json({ message: 'Internal server error' });
+            return res.status(500).json({ errors: { body: ['Internal server error'] } });
         });
 });
 
