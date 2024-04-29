@@ -1,8 +1,8 @@
 import mongoose from "mongoose";
 
-const MONGO_HOST = process.env.MONGO_HOST || "localhost";
-const MONGO_PORT = process.env.MONGO_PORT || 27017;
-const DB_NAME = process.env.DB_NAME || "conduit";
+const MONGO_HOST = process.env.MONGO_HOST;
+const MONGO_PORT = process.env.MONGO_PORT;
+const DB_NAME = process.env.DB_NAME;
 
 function connectToDatabase() {
     return mongoose.connect(`mongodb://${MONGO_HOST}:${MONGO_PORT}/${DB_NAME}`)

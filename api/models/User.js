@@ -7,11 +7,10 @@ const userSchema = new Schema({
     email: {
         type: String,
         required: true,
-        unique: true,
         validate: [
             {
                 validator: (email) => {
-                    validator.isEmail(email);
+                    return validator.isEmail(email);
                 },
                 message: 'Email must be a valid email address'
             }, {
@@ -27,7 +26,6 @@ const userSchema = new Schema({
     username: {
         type: String,
         required: true,
-        unique: true,
         validate: {
             validator: (username) => {
                 return username.length >= 4 && username.length <= 20 && validator.isAlphanumeric(username);

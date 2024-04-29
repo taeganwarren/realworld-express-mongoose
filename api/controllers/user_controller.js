@@ -14,8 +14,11 @@ async function create_user(email, username, password) {
         new_user.password = hash;
         await new_user.save();
     } catch (err) {
-        // TODO: reformat error messages to fit real world spec
-        return { errors: err };
+        const validation_errors = { errors: { body: [] } };
+        for (const error in err.errors) {
+            validation_errors.errors.body.push(err.errors[error].message);
+        }
+        return validation_errors;
     }
     return new_user.format_user_response();
 }
