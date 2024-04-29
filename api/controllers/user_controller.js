@@ -1,4 +1,5 @@
 import bcrypt from 'bcrypt';
+import validator from 'validator';
 import User from "../models/User.js";
 
 async function create_user(email, username, password) {
@@ -6,17 +7,26 @@ async function create_user(email, username, password) {
     const new_user = new User({
         email: email,
         username: username,
-        password: hash
+        password: password
     });
-    await new_user.save();
+    try {
+        await new_user.validate(['email', 'username', 'password']);
+        new_user.password = hash;
+        await new_user.save();
+    } catch (err) {
+        // TODO: reformat error messages to fit real world spec
+        return { "errors": err };
+    }
     return new_user.format_user_response();
 }
 
 async function get_user(email, password) {
+    if (!validator.isEmail(email)) {
+        return { "errors": { "body": ["Email must be a valid email address"] } };
+    }
     const existing_user = await User.findOne({ email: email }, 'email username password bio image').exec();
-    const error_response = { "errors": { "body": ["Invalid email or password"] } };
     if (!existing_user || !(await bcrypt.compare(password, existing_user.password))) {
-        return error_response;
+        return { "errors": { "body": ["Invalid email or password"] } };
     }
     return existing_user.format_user_response();
 }

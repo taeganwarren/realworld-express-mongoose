@@ -4,13 +4,14 @@ import {
     get_user,
     update_user
 } from '../controllers/user_controller.js';
-import validate_user_input from '../middlewares/validate_input.js';
+import {
+    check_input 
+} from '../middlewares/middleware.js';
 
 const users_router = Router();
 
-users_router.post('/users/login', validate_user_input({fields: ['email', 'password']}), (req, res) => {
-    const { email, password } = req.body.user;
-    get_user(email, password)
+users_router.post('/users/login', check_input({ fields: ['email', 'password'] }), (req, res) => {
+    get_user(req.body.user.email, req.body.user.password)
         .then((existing_user) => {
             if (existing_user.errors) {
                 return res.status(422).json(existing_user);
@@ -22,10 +23,12 @@ users_router.post('/users/login', validate_user_input({fields: ['email', 'passwo
         });
 });
 
-users_router.post('/users', validate_user_input({fields: ['username', 'email', 'password']}), (req, res) => {
-    const { email, username, password } = req.body.user;
-    create_user(email, username, password)
+users_router.post('/users', check_input({ fields: ['username', 'email', 'password'] }), (req, res) => {
+    create_user(req.body.user.email, req.body.user.username, req.body.user.password)
         .then((new_user) => {
+            if (new_user.errors) {
+                return res.status(422).json(new_user);
+            }
             return res.status(201).json(new_user);
         })
         .catch((err) => {
