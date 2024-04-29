@@ -6,8 +6,8 @@
   "type": "module",
   "scripts": {
     "start": "node --env-file=.env server.js",
-    "dev": "nodemon --env-file=.env server.js",
-    "test": "npx mocha -r dotenv/config --exit"
+    "dev": "nodemon --env-file=.env.development server.js",
+    "test": "dotenv -e .env.testing -- npx mocha --exit"
   },
   "keywords": [],
   "author": "",
@@ -22,7 +22,7 @@
   "devDependencies": {
     "chai": "^5.1.0",
     "chai-http": "^4.4.0",
-    "dotenv": "^16.4.5",
+    "dotenv-cli": "^7.4.1",
     "mocha": "^10.4.0",
     "nodemon": "^3.1.0"
   }

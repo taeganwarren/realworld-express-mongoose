@@ -7,7 +7,7 @@ function check_input(fields) {
             return true;
         });
         if (!all_fields_are_present) {
-            return res.status(422).json({ errors: { body: ['all fields are required'] } });
+            return res.status(422).json({ errors: { body: ['All fields are required'] } });
         }
         const all_fields_are_string = fields.fields.every((field) => {
             if (typeof req.body.user[field] !== 'string') {
@@ -16,7 +16,7 @@ function check_input(fields) {
             return true;
         });
         if (!all_fields_are_string) {
-            return res.status(422).json({ errors: { body: ['all fields must be strings'] } });
+            return res.status(422).json({ errors: { body: ['All fields must be strings'] } });
         }
         next();
     }
