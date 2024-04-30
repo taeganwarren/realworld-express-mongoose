@@ -16,6 +16,7 @@ const valid_user_create = {user:{email:'john@email.com',username:'john',password
 const invalid_user_login = {user:{email:'johnemail.com',password:'pass'}};
 const nonexisting_user = {user:{email:'johnjohn@email.com',password:'passworddd'}};
 const valid_user_login = {user:{email:'john@email.com',password:'passworddd'}};
+const valid_user_login_2 = {user:{email:'JOHN@EMAIL.COM',password:'passworddd'}};
 
 describe('Users route', () => {
     before(async () => {
@@ -30,6 +31,7 @@ describe('Users route', () => {
                 .post('/api/users')
                 .send(empty_user)
                 .end((err, res) => {
+                    if (res.status !== 422) console.log(res.body);
                     expect(res).to.be.json;
                     expect(res).to.have.header('content-type', 'application/json; charset=utf-8');
                     expect(res).to.have.status(422);
@@ -42,6 +44,7 @@ describe('Users route', () => {
                 .post('/api/users')
                 .send(invalid_fields)
                 .end((err, res) => {
+                    if (res.status !== 422) console.log(res.body);
                     expect(res).to.be.json;
                     expect(res).to.have.header('content-type', 'application/json; charset=utf-8');
                     expect(res).to.have.status(422);
@@ -56,6 +59,7 @@ describe('Users route', () => {
                 .post('/api/users')
                 .send(missing_fields)
                 .end((err, res) => {
+                    if (res.status !== 422) console.log(res.body);
                     expect(res).to.be.json;
                     expect(res).to.have.header('content-type', 'application/json; charset=utf-8');
                     expect(res).to.have.status(422);
@@ -68,6 +72,7 @@ describe('Users route', () => {
                 .post('/api/users')
                 .send(incorrect_fields)
                 .end((err, res) => {
+                    if (res.status !== 422) console.log(res.body);
                     expect(res).to.be.json;
                     expect(res).to.have.header('content-type', 'application/json; charset=utf-8');
                     expect(res).to.have.status(422);
@@ -82,6 +87,7 @@ describe('Users route', () => {
                 .post('/api/users')
                 .send(invalid_user_create)
                 .end((err, res) => {
+                    if (res.status !== 422) console.log(res.body);
                     expect(res).to.be.json;
                     expect(res).to.have.header('content-type', 'application/json; charset=utf-8');
                     expect(res).to.have.status(422);
@@ -96,6 +102,7 @@ describe('Users route', () => {
                 .post('/api/users')
                 .send(valid_user_create)
                 .end((err, res) => {
+                    if (res.status !== 201) console.log(res.body);
                     expect(res).to.be.json;
                     expect(res).to.have.header('content-type', 'application/json; charset=utf-8');
                     expect(res).to.have.status(201);
@@ -112,6 +119,7 @@ describe('Users route', () => {
                 .post('/api/users')
                 .send(valid_user_create)
                 .end((err, res) => {
+                    if (res.status !== 422) console.log(res.body);
                     expect(res).to.be.json;
                     expect(res).to.have.header('content-type', 'application/json; charset=utf-8');
                     expect(res).to.have.status(422);
@@ -126,6 +134,7 @@ describe('Users route', () => {
                 .post('/api/users/login')
                 .send(invalid_user_login)
                 .end((err, res) => {
+                    if (res.status !== 422) console.log(res.body);
                     expect(res).to.be.json;
                     expect(res).to.have.header('content-type', 'application/json; charset=utf-8');
                     expect(res).to.have.status(422);
@@ -139,6 +148,7 @@ describe('Users route', () => {
                 .post('/api/users/login')
                 .send(nonexisting_user)
                 .end((err, res) => {
+                    if (res.status !== 422) console.log(res.body);
                     expect(res).to.be.json;
                     expect(res).to.have.header('content-type', 'application/json; charset=utf-8');
                     expect(res).to.have.status(422);
@@ -151,6 +161,25 @@ describe('Users route', () => {
                 .post('/api/users/login')
                 .send(valid_user_login)
                 .end((err, res) => {
+                    if (res.status !== 200) console.log(res.body);
+                    expect(res).to.be.json;
+                    expect(res).to.have.header('content-type', 'application/json; charset=utf-8');
+                    expect(res).to.have.status(200);
+                    expect(res.body.user).to.have.property('email').equal('john@email.com');
+                    expect(res.body.user).to.have.property('token');
+                    expect(res.body.user).to.have.property('username').equal('john');
+                    expect(res.body.user).to.have.property('bio').equal('');
+                    expect(res.body.user).to.have.property('image').equal('');
+                    done();
+                }
+            );
+        });
+        it('should login with valid input (case insensitive)', (done) => {
+            chai.request(app)
+                .post('/api/users/login')
+                .send(valid_user_login_2)
+                .end((err, res) => {
+                    if (res.status !== 200) console.log(res.body);
                     expect(res).to.be.json;
                     expect(res).to.have.header('content-type', 'application/json; charset=utf-8');
                     expect(res).to.have.status(200);

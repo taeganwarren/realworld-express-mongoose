@@ -1,8 +1,9 @@
 import { Schema, model } from 'mongoose';
 import validator from 'validator';
+import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
-const userSchema = new Schema({
+const user_schema = new Schema({
     id: Schema.Types.ObjectId,
     email: {
         type: String,
@@ -12,7 +13,8 @@ const userSchema = new Schema({
                 return validator.isEmail(email);
             },
             message: 'Email must be a valid email address'
-        }
+        },
+        set: (email) => email.toLowerCase()
     }, 
     username: {
         type: String,
@@ -47,7 +49,15 @@ const userSchema = new Schema({
     favorites: [{ type: Schema.Types.ObjectId, ref: 'Article' }],
 });
 
-userSchema.methods.format_user_response = function() {
+user_schema.methods.hash_password = async function() {
+    this.password = await bcrypt.hash(this.password, 10);
+};
+
+user_schema.methods.check_password = async function(password) {
+    return await bcrypt.compare(password, this.password);
+}
+
+user_schema.methods.format_user_response = function() {
     return {
         user: {
             username: this.username,
@@ -59,7 +69,7 @@ userSchema.methods.format_user_response = function() {
     };
 };
 
-userSchema.methods.generate_jwt = function() {
+user_schema.methods.generate_jwt = function() {
     return jwt.sign({
         user: {
             id: this._id,
@@ -69,13 +79,13 @@ userSchema.methods.generate_jwt = function() {
         }}, process.env.JWT_SECRET_KEY);
 };
 
-userSchema.methods.check_user_exists = async function() {
+user_schema.methods.check_user_exists = async function() {
     if (await User.findOne({ email: this.email })) {
         return true;
     }
     return false;
 }
 
-const User = model('User', userSchema);
+const User = model('User', user_schema);
 
 export default User;
