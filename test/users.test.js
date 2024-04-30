@@ -5,72 +5,119 @@ import User from '../api/models/User.js';
 
 const chai = use(chaiHttp);
 
-describe('Users routes', () => {
+const empty_user = {};
+const invalid_fields = {user:{email:4,username:4,password:4}};
+
+const invalid_user_create = {user:{email:'johnemail.com',username:'jo',password:'pass'}};
+const valid_user_create = {user:{email:'john@email.com',username:'john',password:'passworddd'}};
+
+const invalid_user_login = {user:{email:'johnemail.com',password:'pass'}};
+const nonexisting_user = {user:{email:'johnjohn@email.com',username:'johnjohn',password:'passworddd'}};
+const valid_user_login = {user:{email:'john@email.com',password:'passworddd'}};
+
+describe('Users route', () => {
+    before(async () => {
+        await User.deleteMany();
+    });
+    after(async () => {
+        await User.deleteMany();
+    });
+    describe('Test input validation', () => {
+        it('should not create a new user with empty input', (done) => {
+            chai.request(app)
+                .post('/api/users')
+                .send(empty_user)
+                .end((err, res) => {
+                    expect(res).to.have.status(422);
+                    expect(res.body.errors.body).to.include('All fields are required');
+                    done();
+                });
+        });
+        it('should not create a new user with invalid fields', (done) => {
+            chai.request(app)
+                .post('/api/users')
+                .send(invalid_fields)
+                .end((err, res) => {
+                    expect(res).to.have.status(422);
+                    expect(res.body.errors.body).to.include('All fields must be strings');
+                    done();
+                });
+        });
+    });
     describe('/POST /api/users', () => {
-        before(async () => {
-            await User.deleteMany();
+        it('should not create a new user with invalid input', (done) => {
+            chai.request(app)
+                .post('/api/users')
+                .send(invalid_user_create)
+                .end((err, res) => {
+                    expect(res).to.have.status(422);
+                    expect(res.body.errors.body).to.include('Email must be a valid email address');
+                    expect(res.body.errors.body).to.include('Username must be between 4 and 20 characters and contain only alphanumeric characters');
+                    expect(res.body.errors.body).to.include('Password must be between 10 and 100 characters and contain only ASCII characters');
+                    done();
+                });
         });
-        after(async () => {
-            await User.deleteMany();
+        it('should create a new user', (done) => {
+            chai.request(app)
+                .post('/api/users')
+                .send(valid_user_create)
+                .end((err, res) => {
+                    expect(res).to.have.status(201);
+                    expect(res.body.user).to.have.property('email').equal('john@email.com');
+                    expect(res.body.user).to.have.property('token');
+                    expect(res.body.user).to.have.property('username').equal('john');
+                    expect(res.body.user).to.have.property('bio').equal('');
+                    expect(res.body.user).to.have.property('image').equal('');
+                    done();
+                });
         });
-        it('Register a new user', async () => {
-            const data = {user:{email:'john@email.com',username:'john',password:'passwordddd'}};
-            const data_2 = {user:{email:'john',username:'jo',password:'password'}};
-            const data_3 = {user:{email:4,username:4,password:4}};
-            var requester = chai.request(app).keepOpen();
-            // Register a new user
-            const response_1 = await requester.post('/api/users').send(data);
-            expect(response_1).to.have.status(201);
-            expect(response_1.body.user.username).to.equal('john');
-            expect(response_1.body.user.email).to.equal('john@email.com');
-            expect(response_1.body.user.token).to.be.a('string');
-            expect(response_1.body.user.bio).to.equal('');
-            expect(response_1.body.user.image).to.equal('');
-            // Try to register the same user again
-            const response_2 = await requester.post('/api/users').send(data);
-            expect(response_2).to.have.status(422);
-            expect(response_2.body.errors.body).to.include('Email address already in use');
-            // Try to register a user with missing and invalid credentials
-            const response_3 = await requester.post('/api/users').send(data_2);
-            expect(response_3).to.have.status(422);
-            expect(response_3.body.errors.body).to.include('Email must be a valid email address');
-            expect(response_3.body.errors.body).to.include('Username must be between 4 and 20 characters and contain only alphanumeric characters');
-            expect(response_3.body.errors.body).to.include('Password must be between 10 and 100 characters and contain only ASCII characters');
-            const response_4 = await requester.post('/api/users').send({});
-            expect(response_4).to.have.status(422);
-            expect(response_4.body.errors.body).to.include('All fields are required');
-            const response_5 = await requester.post('/api/users').send(data_3);
-            expect(response_5).to.have.status(422);
-            expect(response_5.body.errors.body).to.include('All fields must be strings');
-            requester.close();
+        it('should not create a new user with existing email', (done) => {
+            chai.request(app)
+                .post('/api/users')
+                .send(valid_user_create)
+                .end((err, res) => {
+                    expect(res).to.have.status(422);
+                    expect(res.body.errors.body).to.include('Email address already in use');
+                    done();
+                });
         });
-        it('Login an existing user', async () => {
-            const data = {user:{email:'john@email.com',password:'passwordddd'}};
-            const data_2 = {user:{email:'john',password:'password'}};
-            const data_3 = {user:{email:'john@email.com',password:'passwordddddddddddd'}};
-            const data_4 = {user:{email:'johnjohn@email.com',password:'passwordddddddddddd'}};
-            var requester = chai.request(app).keepOpen();
-            // Login an existing user
-            const response_1 = await requester.post('/api/users/login').send(data);
-            expect(response_1).to.have.status(200);
-            expect(response_1.body.user.email).to.equal('john@email.com');
-            expect(response_1.body.user.token).to.be.a('string');
-            expect(response_1.body.user.bio).to.equal('');
-            expect(response_1.body.user.image).to.equal('');
-            // Try to login with invalid credentials
-            const response_2 = await requester.post('/api/users/login').send(data_2);
-            expect(response_2).to.have.status(422);
-            expect(response_2.body.errors.body).to.include('Email must be a valid email address');
-            expect(response_2.body.errors.body).to.include('Password must be between 10 and 100 characters and contain only ASCII characters');
-            // Try to login an existing user with wrong password
-            const response_3 = await requester.post('/api/users/login').send(data_3);
-            expect(response_3).to.have.status(422);
-            expect(response_3.body.errors.body).to.include('Invalid email or password');
-            // Try to login a non-existing user
-            const response_4 = await requester.post('/api/users/login').send(data_4);
-            expect(response_4).to.have.status(422);
-            expect(response_4.body.errors.body).to.include('Invalid email or password');
-            requester.close();
+    });
+    describe('/POST /api/users/login', () => {
+        it('should not login with invalid input', (done) => {
+            chai.request(app)
+                .post('/api/users/login')
+                .send(invalid_user_login)
+                .end((err, res) => {
+                    expect(res).to.have.status(422);
+                    expect(res.body.errors.body).to.include('Email must be a valid email address');
+                    expect(res.body.errors.body).to.include('Password must be between 10 and 100 characters and contain only ASCII characters');
+                    done();
+                });
+        });
+        it('should not login with non-existing email', (done) => {
+            chai.request(app)
+                .post('/api/users/login')
+                .send(nonexisting_user)
+                .end((err, res) => {
+                    expect(res).to.have.status(422);
+                    expect(res.body.errors.body).to.include('Invalid email or password');
+                    done();
+                });
+        });
+        it('should login with valid input', (done) => {
+            chai.request(app)
+                .post('/api/users/login')
+                .send(valid_user_login)
+                .end((err, res) => {
+                    expect(res).to.have.status(200);
+                    expect(res.body.user).to.have.property('email').equal('john@email.com');
+                    expect(res.body.user).to.have.property('token');
+                    expect(res.body.user).to.have.property('username').equal('john');
+                    expect(res.body.user).to.have.property('bio').equal('');
+                    expect(res.body.user).to.have.property('image').equal('');
+                    done();
+                }
+            );
         });
     });
 });
