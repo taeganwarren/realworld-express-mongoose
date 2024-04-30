@@ -1,12 +1,10 @@
 import { Router } from 'express';
+import { check_input } from '../middlewares/middleware.js';
 import {
     create_user,
     get_user,
     update_user
 } from '../controllers/user_controller.js';
-import {
-    check_input 
-} from '../middlewares/middleware.js';
 
 const users_router = Router();
 

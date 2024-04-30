@@ -1,10 +1,10 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
 const MONGO_HOST = process.env.MONGO_HOST || 'localhost';
 const MONGO_PORT = process.env.MONGO_PORT || 27017;
-const DB_NAME = process.env.DB_NAME || 'conduit';
+const DB_NAME = process.env.DB_NAME || 'conduit_development';
 
-function connectToDatabase() {
+function connect_to_database() {
     return mongoose.connect(`mongodb://${MONGO_HOST}:${MONGO_PORT}/${DB_NAME}`)
         .then(() => {
             // TODO: Separate this into a logger
@@ -16,4 +16,4 @@ function connectToDatabase() {
         });
 }
 
-export default connectToDatabase;
+export default connect_to_database;
