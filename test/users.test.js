@@ -44,5 +44,33 @@ describe('Users routes', () => {
             expect(response_5.body.errors.body).to.include('All fields must be strings');
             requester.close();
         });
+        it('Login an existing user', async () => {
+            const data = {user:{email:'john@email.com',password:'passwordddd'}};
+            const data_2 = {user:{email:'john',password:'password'}};
+            const data_3 = {user:{email:'john@email.com',password:'passwordddddddddddd'}};
+            const data_4 = {user:{email:'johnjohn@email.com',password:'passwordddddddddddd'}};
+            var requester = chai.request(app).keepOpen();
+            // Login an existing user
+            const response_1 = await requester.post('/api/users/login').send(data);
+            expect(response_1).to.have.status(200);
+            expect(response_1.body.user.email).to.equal('john@email.com');
+            expect(response_1.body.user.token).to.be.a('string');
+            expect(response_1.body.user.bio).to.equal('');
+            expect(response_1.body.user.image).to.equal('');
+            // Try to login with invalid credentials
+            const response_2 = await requester.post('/api/users/login').send(data_2);
+            expect(response_2).to.have.status(422);
+            expect(response_2.body.errors.body).to.include('Email must be a valid email address');
+            expect(response_2.body.errors.body).to.include('Password must be between 10 and 100 characters and contain only ASCII characters');
+            // Try to login an existing user with wrong password
+            const response_3 = await requester.post('/api/users/login').send(data_3);
+            expect(response_3).to.have.status(422);
+            expect(response_3.body.errors.body).to.include('Invalid email or password');
+            // Try to login a non-existing user
+            const response_4 = await requester.post('/api/users/login').send(data_4);
+            expect(response_4).to.have.status(422);
+            expect(response_4.body.errors.body).to.include('Invalid email or password');
+            requester.close();
+        });
     });
 });
