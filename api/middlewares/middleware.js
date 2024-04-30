@@ -1,22 +1,20 @@
-function check_input(fields) {
+function check_input(required_fields) {
     return (req, res, next) => {
-        const all_fields_are_present = fields.fields.every((field) => {
-            if (!req.body.user || !req.body.user[field]) {
-                return false;
-            }
-            return true;
-        });
-        if (!all_fields_are_present) {
-            return res.status(422).json({ errors: { body: ['All fields are required'] } });
+        const user = req.body.user || {};
+        const keys = Object.keys(user);
+        const errors = [];
+        if (required_fields.fields.length !== keys.length) {
+            errors.push('Invalid number of fields');
         }
-        const all_fields_are_string = fields.fields.every((field) => {
-            if (typeof req.body.user[field] !== 'string') {
-                return false;
+        required_fields.fields.forEach((field) => {
+            if (!keys.includes(field)) {
+                errors.push(`Missing field: ${field}`);
+            } else if (typeof user[field] !== 'string') {
+                errors.push(`Field must be a string: ${field}`);
             }
-            return true;
         });
-        if (!all_fields_are_string) {
-            return res.status(422).json({ errors: { body: ['All fields must be strings'] } });
+        if (errors.length > 0) {
+            return res.status(422).json({ errors: { body: errors } });
         }
         next();
     }
