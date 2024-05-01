@@ -1,14 +1,13 @@
 import mongoose from 'mongoose';
 
-const MONGO_HOST = process.env.MONGO_HOST || 'localhost';
-const MONGO_PORT = process.env.MONGO_PORT || 27017;
-const DB_NAME = process.env.DB_NAME || 'conduit_development';
+const MONGO_CONNECTION_STRING = process.env.MONGO_CONNECTION_STRING;
 
 function connect_to_database() {
-    return mongoose.connect(`mongodb://${MONGO_HOST}:${MONGO_PORT}/${DB_NAME}`)
+    // TODO: Handle database disconnects
+    return mongoose.connect(MONGO_CONNECTION_STRING)
         .then(() => {
             // TODO: Separate this into a logger
-            if (process.env.NODE_ENV == 'development') console.log(`Connected to MongoDB Database at: ${MONGO_HOST}:${MONGO_PORT}`);
+            if (process.env.NODE_ENV == 'development') console.log('Connected to MongoDB');
         })
         .catch((err) => {
             console.error(err);

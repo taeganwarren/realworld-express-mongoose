@@ -8,6 +8,8 @@ const user_schema = new Schema({
     email: {
         type: String,
         required: true,
+        unique: true,
+        index: true,
         validate: {
             validator: (email) => {
                 return validator.isEmail(email);
@@ -15,7 +17,8 @@ const user_schema = new Schema({
             message: 'Email must be a valid email address'
         },
         set: (email) => email.toLowerCase()
-    }, 
+    },
+    // TODO: make usernames unique
     username: {
         type: String,
         required: true,
@@ -45,7 +48,6 @@ const user_schema = new Schema({
         default: ''
     },
     articles: [{ type: Schema.Types.ObjectId, ref: 'Article' }],
-    comments: [{ type: Schema.Types.ObjectId, ref: 'Comment' }],
     favorites: [{ type: Schema.Types.ObjectId, ref: 'Article' }],
 });
 
@@ -74,8 +76,7 @@ user_schema.methods.generate_jwt = function() {
         user: {
             id: this._id,
             email: this.email,
-            username: this.username,
-            password: this.password,
+            username: this.username
         }}, process.env.JWT_SECRET_KEY);
 };
 

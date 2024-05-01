@@ -1,4 +1,4 @@
-function format_errors(err) {
+function format_validation_errors(err) {
     const validation_errors = { errors: { body: [] } };
     for (const error in err.errors) {
         validation_errors.errors.body.push(err.errors[error].message);
@@ -7,5 +7,5 @@ function format_errors(err) {
 }
 
 export {
-    format_errors
+    format_validation_errors
 };

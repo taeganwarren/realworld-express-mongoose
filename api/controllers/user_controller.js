@@ -1,5 +1,5 @@
 import User from '../models/User.js';
-import { format_errors } from '../../utils/helpers.js';
+import { format_validation_errors } from '../../utils/helpers.js';
 
 async function create_user(email, username, password) {
     const new_user = new User({
@@ -16,7 +16,7 @@ async function create_user(email, username, password) {
         await new_user.save();
         return new_user.format_user_response();
     } catch (err) {
-        return format_errors(err);
+        return format_validation_errors(err);
     }
 }
 
@@ -33,7 +33,7 @@ async function get_user(email, password) {
         }
         return existing_user.format_user_response();
     } catch (err) {
-        return format_errors(err);
+        return format_validation_errors(err);
     }
 }
 

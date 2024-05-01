@@ -22,9 +22,9 @@ describe('Users route', () => {
     before(async () => {
         await User.deleteMany();
     });
-    after(async () => {
-        await User.deleteMany();
-    });
+    // after(async () => {
+    //     await User.deleteMany();
+    // });
     describe('Test input validation for users route', () => {
         it('should not create a new user with empty input', (done) => {
             chai.request(app)
