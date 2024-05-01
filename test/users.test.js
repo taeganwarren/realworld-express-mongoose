@@ -18,15 +18,15 @@ const nonexisting_user = {user:{email:'johnjohn@email.com',password:'passworddd'
 const valid_user_login = {user:{email:'john@email.com',password:'passworddd'}};
 const valid_user_login_2 = {user:{email:'JOHN@EMAIL.COM',password:'passworddd'}};
 
-describe('Users route', () => {
-    before(async () => {
+describe('Users route', function() {
+    before(async function() {
         await User.deleteMany();
     });
     // after(async () => {
     //     await User.deleteMany();
     // });
-    describe('Test input validation for users route', () => {
-        it('should not create a new user with empty input', (done) => {
+    describe('Test input validation for users route', function() {
+        it('should not create a new user with empty input', function(done) {
             chai.request(app)
                 .post('/api/users')
                 .send(empty_user)
@@ -39,7 +39,8 @@ describe('Users route', () => {
                     done();
                 });
         });
-        it('should not create a new user with invalid input', (done) => {
+
+        it('should not create a new user with invalid input', function(done) {
             chai.request(app)
                 .post('/api/users')
                 .send(invalid_fields)
@@ -54,7 +55,8 @@ describe('Users route', () => {
                     done();
                 });
         });
-        it('should not create a new user with missing input', (done) => {
+
+        it('should not create a new user with missing input', function(done) {
             chai.request(app)
                 .post('/api/users')
                 .send(missing_fields)
@@ -67,7 +69,8 @@ describe('Users route', () => {
                     done();
                 });
         });
-        it('should not create a new user with incorrect input', (done) => {
+
+        it('should not create a new user with incorrect input', function(done) {
             chai.request(app)
                 .post('/api/users')
                 .send(incorrect_fields)
@@ -81,8 +84,9 @@ describe('Users route', () => {
                 });
         });
     });
-    describe('/POST /api/users', () => {
-        it('should not create a new user with invalid input', (done) => {
+
+    describe('/POST /api/users', function() {
+        it('should not create a new user with invalid input', function(done) {
             chai.request(app)
                 .post('/api/users')
                 .send(invalid_user_create)
@@ -97,7 +101,8 @@ describe('Users route', () => {
                     done();
                 });
         });
-        it('should create a new user', (done) => {
+
+        it('should create a new user', function(done) {
             chai.request(app)
                 .post('/api/users')
                 .send(valid_user_create)
@@ -114,7 +119,8 @@ describe('Users route', () => {
                     done();
                 });
         });
-        it('should not create a new user with existing email', (done) => {
+
+        it('should not create a new user with existing email', function(done) {
             chai.request(app)
                 .post('/api/users')
                 .send(valid_user_create)
@@ -128,8 +134,9 @@ describe('Users route', () => {
                 });
         });
     });
-    describe('/POST /api/users/login', () => {
-        it('should not login with invalid input', (done) => {
+
+    describe('/POST /api/users/login', function() {
+        it('should not login with invalid input', function(done) {
             chai.request(app)
                 .post('/api/users/login')
                 .send(invalid_user_login)
@@ -143,7 +150,8 @@ describe('Users route', () => {
                     done();
                 });
         });
-        it('should not login with non-existing email', (done) => {
+
+        it('should not login with non-existing email', function(done) {
             chai.request(app)
                 .post('/api/users/login')
                 .send(nonexisting_user)
@@ -156,7 +164,8 @@ describe('Users route', () => {
                     done();
                 });
         });
-        it('should login with valid input', (done) => {
+
+        it('should login with valid input', function(done) {
             chai.request(app)
                 .post('/api/users/login')
                 .send(valid_user_login)
@@ -174,7 +183,8 @@ describe('Users route', () => {
                 }
             );
         });
-        it('should login with valid input (case insensitive)', (done) => {
+
+        it('should login with valid input (case insensitive)', function(done) {
             chai.request(app)
                 .post('/api/users/login')
                 .send(valid_user_login_2)
