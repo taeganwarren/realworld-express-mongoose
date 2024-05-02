@@ -5,5 +5,5 @@ import mochaPlugin from 'eslint-plugin-mocha';
 export default [
 	{languageOptions: { globals: globals.node }},
 	pluginJs.configs.recommended,
-	mochaPlugin.configs.flat.recommended,
+	mochaPlugin.configs.flat.recommended
 ];

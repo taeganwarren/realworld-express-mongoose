@@ -1,3 +1,4 @@
+// TODO: Allow fields to be optional or make a separate function for optional fields
 function check_input(required_fields) {
     return (req, res, next) => {
         const user = req.body.user || {};

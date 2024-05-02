@@ -1,6 +1,6 @@
-import { Schema } from 'mongoose';
+import { Schema, model } from 'mongoose';
 
-const commentSchema = new Schema({
+const comment_schema = new Schema({
     id: Schema.Types.ObjectId,
     author_username: String, // TODO: Maybe this should be a reference to the User model?
     body: String,
@@ -9,4 +9,5 @@ const commentSchema = new Schema({
     article: { type: Schema.Types.ObjectId, ref: 'Article', index: true },
 });
 
-const Comment = mongoose.model('Comment', commentSchema);
+const Comment = model('Comment', comment_schema);
+export default Comment;

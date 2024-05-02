@@ -5,9 +5,10 @@
   "main": "server.js",
   "type": "module",
   "scripts": {
-    "start": "node --env-file=.env server.js",
-    "dev": "nodemon --env-file=.env.development server.js",
-    "test": "dotenv -e .env.testing -- npx mocha --exit"
+    "start": "node --env-file=.env.development ./api/server.js",
+    "dev": "nodemon --env-file=.env.development ./api/server.js",
+    "test": "dotenv -e .env.testing -- npx mocha --exit",
+    "lint": "eslint ."
   },
   "keywords": [],
   "author": "",

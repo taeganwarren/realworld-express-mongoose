@@ -1,6 +1,6 @@
 import { use, expect } from 'chai';
 import chaiHttp from 'chai-http';
-import app from '../server.js';
+import app from '../api/server.js';
 import User from '../api/models/User.js';
 
 const chai = use(chaiHttp);

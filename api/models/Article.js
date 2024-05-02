@@ -1,6 +1,6 @@
-import { Schema } from 'mongoose';
+import { Schema, model } from 'mongoose';
 
-const articleSchema = new Schema({
+const article_schema = new Schema({
     id: Schema.Types.ObjectId,
     slug: String,
     title: String,
@@ -18,4 +18,5 @@ const articleSchema = new Schema({
     author_username: String, // TODO: Maybe this should be a reference to the User model?
 });
 
-const Article = mongoose.model('Article', articleSchema);
+const Article = model('Article', article_schema);
+export default Article;

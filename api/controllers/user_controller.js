@@ -20,6 +20,7 @@ async function create_user(email, username, password) {
     }
 }
 
+// TODO: Refactor this function to use a separate function for checking if the user exists vs logging in
 async function get_user(email, password) {
     const user_input = new User({
         email: email,

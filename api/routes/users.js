@@ -6,6 +6,7 @@ import {
     update_user
 } from '../controllers/user_controller.js';
 
+const ENV = process.env.NODE_ENV;
 const users_router = Router();
 
 users_router.post('/users/login', check_input({ fields: ['email', 'password'] }), (req, res) => {
@@ -17,6 +18,7 @@ users_router.post('/users/login', check_input({ fields: ['email', 'password'] })
             return res.status(200).json(existing_user);
         })
         .catch((err) => {
+            if (ENV === 'development') console.log(err);
             return res.status(500).json({ errors: { body: ['Internal server error'] } });
         });
 });
@@ -30,6 +32,7 @@ users_router.post('/users', check_input({ fields: ['username', 'email', 'passwor
             return res.status(201).json(new_user);
         })
         .catch((err) => {
+            if (ENV === 'development') console.log(err);
             return res.status(500).json({ errors: { body: ['Internal server error'] } });
         });
 });
