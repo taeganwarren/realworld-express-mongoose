@@ -9,9 +9,14 @@ async function create_user(email, username, password) {
     });
     try {
         await new_user.validate(['email', 'username', 'password']);
-        if (await new_user.check_user_exists()) {
-            return { errors: { body: ['Email address already in use'] } };
+        const errors = { errors: { body: [] } };
+        if (await new_user.check_email_exists()) {
+            errors.errors.body.push('Email address already in use');
         }
+        if (await new_user.check_username_exists()) {
+            errors.errors.body.push('Username already in use');
+        }
+        if (errors.errors.body.length > 0) return errors;
         await new_user.hash_password();
         await new_user.save();
         return new_user.format_user_response();

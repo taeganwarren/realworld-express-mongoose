@@ -1,4 +1,4 @@
-import { Schema, model } from 'mongoose';
+import { Schema, model, set } from 'mongoose';
 import validator from 'validator';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
@@ -18,16 +18,17 @@ const user_schema = new Schema({
         },
         set: (email) => email.toLowerCase()
     },
-    // TODO: make usernames unique
     username: {
         type: String,
         required: true,
+        unique: true,
         validate: {
             validator: (username) => {
                 return username.length >= 4 && username.length <= 20 && validator.isAlphanumeric(username);
             },
             message: 'Username must be between 4 and 20 characters and contain only alphanumeric characters'
-        }
+        },
+        set: (username) => username.toLowerCase()
     },
     password: {
         type: String,
@@ -47,8 +48,7 @@ const user_schema = new Schema({
         type: String,
         default: ''
     },
-    articles: [{ type: Schema.Types.ObjectId, ref: 'Article' }],
-    favorites: [{ type: Schema.Types.ObjectId, ref: 'Article' }],
+    articles: [{ type: Schema.Types.ObjectId, ref: 'Article' }]
 });
 
 user_schema.methods.hash_password = async function() {
@@ -77,16 +77,17 @@ user_schema.methods.generate_jwt = function() {
             id: this._id,
             email: this.email,
             username: this.username
-        }}, process.env.JWT_SECRET_KEY);
+        }
+    }, process.env.JWT_SECRET_KEY);
 };
 
-user_schema.methods.check_user_exists = async function() {
-    if (await User.findOne({ email: this.email })) {
-        return true;
-    }
-    return false;
+user_schema.methods.check_email_exists = async function() {
+    return await User.exists({ email: this.email });
+}
+
+user_schema.methods.check_username_exists = async function() {
+    return await User.exists({ username: this.username });
 }
 
 const User = model('User', user_schema);
-
 export default User;

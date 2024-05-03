@@ -12,6 +12,7 @@ const incorrect_fields = {user:{email:'john@email.com',username:'myusername',thi
 
 const invalid_user_create = {user:{email:'johnemail.com',username:'jo',password:'pass'}};
 const valid_user_create = {user:{email:'john@email.com',username:'john',password:'passworddd'}};
+const invalid_user_create_2 = {user:{email:'johnjohn@email.com',username:'john',password:'passworddd'}};
 
 const invalid_user_login = {user:{email:'johnemail.com',password:'pass'}};
 const nonexisting_user = {user:{email:'johnjohn@email.com',password:'passworddd'}};
@@ -130,6 +131,20 @@ describe('Users route', function() {
                     expect(res).to.have.header('content-type', 'application/json; charset=utf-8');
                     expect(res).to.have.status(422);
                     expect(res.body.errors.body).to.include('Email address already in use');
+                    done();
+                });
+        });
+
+        it('should not create a new user with existing username', function(done) {
+            chai.request(app)
+                .post('/api/users')
+                .send(invalid_user_create_2)
+                .end((err, res) => {
+                    if (res.status !== 422) console.log(res.body);
+                    expect(res).to.be.json;
+                    expect(res).to.have.header('content-type', 'application/json; charset=utf-8');
+                    expect(res).to.have.status(422);
+                    expect(res.body.errors.body).to.include('Username already in use');
                     done();
                 });
         });

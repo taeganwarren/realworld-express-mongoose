@@ -15,7 +15,10 @@ const article_schema = new Schema({
     createdAt: Date,
     editedAt: Date,
     favoritesCount: Number,
-    author_username: String, // TODO: Maybe this should be a reference to the User model?
+    author_username: {
+        type: Schema.Types.ObjectId,
+        ref: 'User'
+    }
 });
 
 const Article = model('Article', article_schema);
