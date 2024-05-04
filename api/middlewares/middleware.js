@@ -1,3 +1,5 @@
+import jwt from 'jsonwebtoken';
+
 // TODO: Allow fields to be optional or make a separate function for optional fields
 function check_input(required_fields) {
     return (req, res, next) => {
@@ -21,6 +23,22 @@ function check_input(required_fields) {
     }
 }
 
+function verify_token(req, res, next) {
+    const token = req.headers.authorization;
+    if (!token) {
+        return res.status(401).json({ errors: { body: ['Invalid token'] } });
+    }
+    jwt.verify(token.split(' ')[1], process.env.JWT_SECRET_KEY, (err, decoded) => {
+        if (err) {
+            return res.status(401).json({ errors: { body: ['Invalid token'] } });
+        }
+        req.body.user = decoded.user;
+        req.body.user.token = token;
+    });
+    next();
+}
+
 export {
-    check_input
+    check_input,
+    verify_token
 };

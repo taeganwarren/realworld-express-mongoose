@@ -19,14 +19,14 @@ async function create_user(email, username, password) {
         if (errors.errors.body.length > 0) return errors;
         await new_user.hash_password();
         await new_user.save();
+        new_user.token = new_user.generate_jwt();
         return new_user.format_user_response();
     } catch (err) {
         return format_validation_errors(err);
     }
 }
 
-// TODO: Refactor this function to use a separate function for checking if the user exists vs logging in
-async function get_user(email, password) {
+async function login_user(email, password) {
     const user_input = new User({
         email: email,
         password: password
@@ -37,9 +37,24 @@ async function get_user(email, password) {
         if (!existing_user || !(await existing_user.check_password(user_input.password))) {
             return { errors: { body: ['Invalid email or password'] } };
         }
+        existing_user.token = existing_user.generate_jwt();
         return existing_user.format_user_response();
     } catch (err) {
         return format_validation_errors(err);
+    }
+}
+
+async function get_user(user) {
+    try {
+        const existing_user = await User.findOne({ email: user.email }, 'email username bio image').exec();
+        if (!existing_user) {
+            return { errors: { body: ['User not found'] } };
+        }
+        existing_user.token = user.token;
+        return existing_user.format_user_response();
+    }
+    catch (err) {
+        return { errors: { body: ['Internal server error'] } };
     }
 }
 
@@ -49,6 +64,7 @@ async function update_user() {
 
 export { 
     create_user,
+    login_user,
     get_user,
     update_user
 };

@@ -19,6 +19,8 @@ const nonexisting_user = {user:{email:'johnjohn@email.com',password:'passworddd'
 const valid_user_login = {user:{email:'john@email.com',password:'passworddd'}};
 const valid_user_login_2 = {user:{email:'JOHN@EMAIL.COM',password:'passworddd'}};
 
+let token = '';
+
 describe('Users route', function() {
     before(async function() {
         await User.deleteMany();
@@ -213,9 +215,48 @@ describe('Users route', function() {
                     expect(res.body.user).to.have.property('username').equal('john');
                     expect(res.body.user).to.have.property('bio').equal('');
                     expect(res.body.user).to.have.property('image').equal('');
+                    token = res.body.user.token;
                     done();
                 }
             );
         });
+    });
+
+    describe('/GET /api/user', function() {
+        it('should not get user with invalid token', function(done) {
+            chai.request(app)
+                .get('/api/user')
+                .set('authorization', 'Bearer invalidtoken')
+                .end((err, res) => {
+                    if (res.status !== 401) console.log(res.body);
+                    expect(res).to.be.json;
+                    expect(res).to.have.header('content-type', 'application/json; charset=utf-8');
+                    expect(res).to.have.status(401);
+                    expect(res.body.errors.body).to.include('Invalid token');
+                    done();
+                });
+        });
+
+        it('should get user with valid token', function(done) {
+            chai.request(app)
+                .get('/api/user')
+                .set('authorization', `Bearer ${token}`)
+                .end((err, res) => {
+                    if (res.status !== 200) console.log(res.body);
+                    expect(res).to.be.json;
+                    expect(res).to.have.header('content-type', 'application/json; charset=utf-8');
+                    expect(res).to.have.status(200);
+                    expect(res.body.user).to.have.property('email').equal('john@email.com');
+                    expect(res.body.user).to.have.property('token').equal('Bearer ' + token);
+                    expect(res.body.user).to.have.property('username').equal('john');
+                    expect(res.body.user).to.have.property('bio').equal('');
+                    expect(res.body.user).to.have.property('image').equal('');
+                    done();
+                });
+        });
+    });
+
+    describe('/PUT /api/user', function() {
+
     });
 });

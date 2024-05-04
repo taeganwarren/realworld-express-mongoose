@@ -63,7 +63,7 @@ user_schema.methods.format_user_response = function() {
     return {
         user: {
             username: this.username,
-            token: this.generate_jwt(),
+            token: this.token,
             email: this.email,
             bio: this.bio,
             image: this.image
