@@ -283,10 +283,100 @@ describe('Users route', function() {
                     expect(res).to.have.header('content-type', 'application/json; charset=utf-8');
                     expect(res).to.have.status(200);
                     expect(res.body.user).to.have.property('email').equal('john@email.com');
-                    expect(res.body.user).to.have.property('token').equal('Bearer ' + token);
+                    expect(res.body.user).to.have.property('token');
                     expect(res.body.user).to.have.property('username').equal('john');
                     expect(res.body.user).to.have.property('bio').equal('my bio');
                     expect(res.body.user).to.have.property('image').equal('my image');
+                    done();
+                });
+        });
+
+        it('should update email with valid token', function(done) {
+            chai.request(app)
+                .put('/api/user')
+                .set('authorization', `Bearer ${token}`)
+                .send({user:{email:'johnnyjohn@email.com'}})
+                .end((err, res) => {
+                    if (res.status !== 200) console.log(res.body);
+                    expect(res).to.be.json;
+                    expect(res).to.have.header('content-type', 'application/json; charset=utf-8');
+                    expect(res).to.have.status(200);
+                    expect(res.body.user).to.have.property('email').equal('johnnyjohn@email.com');
+                    expect(res.body.user).to.have.property('token');
+                    expect(res.body.user).to.have.property('username').equal('john');
+                    expect(res.body.user).to.have.property('bio').equal('my bio');
+                    expect(res.body.user).to.have.property('image').equal('my image');
+                    token = res.body.user.token;
+                    done();
+                });
+        });
+
+        it('should not update email with existing email', function(done) {
+            chai.request(app)
+                .put('/api/user')
+                .set('authorization', `Bearer ${token}`)
+                .send({user:{email:'johnnyjohn@email.com'}})
+                .end((err, res) => {
+                    if (res.status !== 422) console.log(res.body);
+                    expect(res).to.be.json;
+                    expect(res).to.have.header('content-type', 'application/json; charset=utf-8');
+                    expect(res).to.have.status(422);
+                    expect(res.body.errors.body).to.include('Email address already in use');
+                    done();
+                });
+        });
+
+        it('should update username with valid token', function(done) {
+            chai.request(app)
+                .put('/api/user')
+                .set('authorization', `Bearer ${token}`)
+                .send({user:{username:'johnny'}})
+                .end((err, res) => {
+                    if (res.status !== 200) console.log(res.body);
+                    expect(res).to.be.json;
+                    expect(res).to.have.header('content-type', 'application/json; charset=utf-8');
+                    expect(res).to.have.status(200);
+                    expect(res.body.user).to.have.property('email').equal('johnnyjohn@email.com');
+                    expect(res.body.user).to.have.property('token');
+                    expect(res.body.user).to.have.property('username').equal('johnny');
+                    expect(res.body.user).to.have.property('bio').equal('my bio');
+                    expect(res.body.user).to.have.property('image').equal('my image');
+                    token = res.body.user.token;
+                    done();
+                });
+        });
+
+        it('should not update username with existing username', function(done) {
+            chai.request(app)
+                .put('/api/user')
+                .set('authorization', `Bearer ${token}`)
+                .send({user:{username:'johnny'}})
+                .end((err, res) => {
+                    if (res.status !== 422) console.log(res.body);
+                    expect(res).to.be.json;
+                    expect(res).to.have.header('content-type', 'application/json; charset=utf-8');
+                    expect(res).to.have.status(422);
+                    expect(res.body.errors.body).to.include('Username already in use');
+                    done();
+                });
+        });
+
+        it('should update password with valid token', function(done) {
+            chai.request(app)
+                .put('/api/user')
+                .set('authorization', `Bearer ${token}`)
+                .send({user:{password:'newpassworddddddddddd'}})
+                .end((err, res) => {
+                    if (res.status !== 200) console.log(res.body);
+                    expect(res).to.be.json;
+                    expect(res).to.have.header('content-type', 'application/json; charset=utf-8');
+                    expect(res).to.have.status(200);
+                    expect(res.body.user).to.have.property('email').equal('johnnyjohn@email.com');
+                    expect(res.body.user).to.have.property('token');
+                    expect(res.body.user).to.have.property('username').equal('johnny');
+                    expect(res.body.user).to.have.property('bio').equal('my bio');
+                    expect(res.body.user).to.have.property('image').equal('my image');
+                    token = res.body.user.token;
                     done();
                 });
         });

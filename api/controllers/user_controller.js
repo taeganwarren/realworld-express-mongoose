@@ -45,7 +45,6 @@ async function get_user(current_user) {
 }
 
 async function update_user(current_user, updated_user_input) {
-    const token = current_user.token;
     current_user = await User.findOne({ email: current_user.email }, 'email username password bio image').exec();
     for (const key in updated_user_input) {
         current_user[key] = updated_user_input[key];
@@ -64,7 +63,7 @@ async function update_user(current_user, updated_user_input) {
         await current_user.hash_password();
     }
     await current_user.save();
-    current_user.token = token;
+    current_user.token = current_user.generate_jwt();
     return current_user.format_user_response();
 }
 
