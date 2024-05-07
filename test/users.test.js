@@ -257,6 +257,38 @@ describe('Users route', function() {
     });
 
     describe('/PUT /api/user', function() {
+        it('should not update user with invalid token', function(done) {
+            chai.request(app)
+                .put('/api/user')
+                .set('authorization', 'Bearer invalidtoken')
+                .send(valid_user_login)
+                .end((err, res) => {
+                    if (res.status !== 401) console.log(res.body);
+                    expect(res).to.be.json;
+                    expect(res).to.have.header('content-type', 'application/json; charset=utf-8');
+                    expect(res).to.have.status(401);
+                    expect(res.body.errors.body).to.include('Invalid token');
+                    done();
+                });
+        });
 
+        it('should update bio and image with valid token', function(done) {
+            chai.request(app)
+                .put('/api/user')
+                .set('authorization', `Bearer ${token}`)
+                .send({user:{bio:'my bio',image:'my image'}})
+                .end((err, res) => {
+                    if (res.status !== 200) console.log(res.body);
+                    expect(res).to.be.json;
+                    expect(res).to.have.header('content-type', 'application/json; charset=utf-8');
+                    expect(res).to.have.status(200);
+                    expect(res.body.user).to.have.property('email').equal('john@email.com');
+                    expect(res.body.user).to.have.property('token').equal('Bearer ' + token);
+                    expect(res.body.user).to.have.property('username').equal('john');
+                    expect(res.body.user).to.have.property('bio').equal('my bio');
+                    expect(res.body.user).to.have.property('image').equal('my image');
+                    done();
+                });
+        });
     });
 });

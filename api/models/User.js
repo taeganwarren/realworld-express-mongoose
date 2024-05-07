@@ -1,4 +1,4 @@
-import { Schema, model, set } from 'mongoose';
+import { Schema, model } from 'mongoose';
 import validator from 'validator';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
@@ -80,14 +80,6 @@ user_schema.methods.generate_jwt = function() {
         }
     }, process.env.JWT_SECRET_KEY);
 };
-
-user_schema.methods.check_email_exists = async function() {
-    return await User.exists({ email: this.email });
-}
-
-user_schema.methods.check_username_exists = async function() {
-    return await User.exists({ username: this.username });
-}
 
 const User = model('User', user_schema);
 export default User;
