@@ -7,7 +7,7 @@ const user_schema = new Schema({
     password: String,
     bio: String,
     image: String,
-    articles: [{ type: Schema.Types.ObjectId, ref: 'Article' }]
+    following: [{ type: Schema.Types.ObjectId, ref: 'User' }],
 });
 
 const User = model('User', user_schema);
