@@ -10,6 +10,8 @@ app.use(v1_router);
 
 connect_to_database().then(() => {
     app.listen(PORT, () => {
-        console.log(`API listening on port: ${PORT}`);
+        //console.log(`API listening on port: ${PORT}`);
     });
 });
+
+export default app; // for testing

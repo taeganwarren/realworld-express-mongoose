@@ -7,6 +7,7 @@
   "scripts": {
     "start": "node --env-file=.env.development ./api/server.js",
     "dev": "node --watch --env-file=.env.development ./api/server.js",
+    "test": "dotenv -e .env.testing -- npx mocha --exit",
     "lint": "eslint ."
   },
   "keywords": [],
@@ -16,10 +17,14 @@
     "bcrypt": "^5.1.1",
     "express": "^4.19.2",
     "jsonwebtoken": "^9.0.2",
+    "mocha": "^10.4.0",
     "mongoose": "^8.3.2"
   },
   "devDependencies": {
     "@eslint/js": "^9.1.1",
+    "chai": "^5.1.1",
+    "chai-http": "^4.4.0",
+    "dotenv-cli": "^7.4.2",
     "eslint": "^9.1.1",
     "globals": "^15.1.0"
   }
