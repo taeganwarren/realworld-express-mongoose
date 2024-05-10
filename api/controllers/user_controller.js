@@ -16,7 +16,7 @@ async function create_user(email, username, password) {
 }
 
 async function login_user(email, password) {
-    const user = await User.findOne({ email: email });
+    const user = await User.findOne({ email: email }, 'email username password');
     if (!user) {
         return { error: "Login failed" };
     }
@@ -33,7 +33,7 @@ async function login_user(email, password) {
 }
 
 async function get_user(id) {
-    const user = await User.findById(id);
+    const user = await User.findById(id, 'email username');
     return {
         email: user.email,
         username: user.username

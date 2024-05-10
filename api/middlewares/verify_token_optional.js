@@ -1,9 +1,9 @@
 import jwt from 'jsonwebtoken';
 
-function verify_token(req, res, next) {
+function verify_token_optional(req, res, next) {
     if (!req.headers.authorization) {
-        res.status(401).json({ error: "Unauthorized" });
-        return;
+        req.user = { id: undefined };
+        next();
     } else {
         const token = req.headers.authorization.split(' ')[1];
         try {
@@ -19,4 +19,4 @@ function verify_token(req, res, next) {
     }
 }
 
-export default verify_token;
+export default verify_token_optional;
