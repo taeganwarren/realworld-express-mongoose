@@ -7,21 +7,27 @@ const user_schema = new Schema({
         type: String,
         unique: true,
         required: true,
-        validator: (value) => {
-            return validator.isEmail(value);
+        validate: {
+            validator: (email) => validator.isEmail(email),
+            message: 'Invalid email'
         }
     },
     username: {
         type: String,
         unique: true,
         required: true,
-        validator: (value) => {
-            return validator.isAlphanumeric(value);
+        validate: {
+            validator: (username) => validator.isAlphanumeric(username),
+            message: 'Invalid username'
         }
     },
     password: {
         type: String,
-        required: true
+        required: true,
+        validate: {
+            validator: (password) => validator.isStrongPassword(password),
+            message: 'Invalid password'
+        }
     },
     bio: {
         type: String,

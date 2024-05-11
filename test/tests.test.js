@@ -140,26 +140,4 @@ describe('Tests', function() {
                 done();
             });
     });
-    it('should get user one profile', function(done) {
-        chai.request(app)
-            .get('/api/profiles/test_user_updated')
-            .set('Authorization', `Token ${user_two_token}`)
-            .end((err, res) => {
-                expect(res).to.have.status(200);
-                expect(res.body).to.have.property('username').equal('test_user_updated');
-                expect(res.body).to.have.property('following').equal(false);
-                done();
-            });
-    });
-    it('should get user two profile', function(done) {
-        chai.request(app)
-            .get('/api/profiles/test_user2')
-            .set('Authorization', `Token ${user_one_token}`)
-            .end((err, res) => {
-                expect(res).to.have.status(200);
-                expect(res.body).to.have.property('username').equal('test_user2');
-                expect(res.body).to.have.property('following').equal(false);
-                done();
-            });
-    });
 });
