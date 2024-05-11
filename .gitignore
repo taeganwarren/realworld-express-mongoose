@@ -33,6 +33,4 @@ yarn-debug.log*
 yarn-error.log*
 
 
-.env.development
-.env.testing
-todo
+.env
