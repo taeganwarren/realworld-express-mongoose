@@ -1,6 +1,8 @@
-import User from '../models/User.js';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import validator from 'validator';
+import User from '../models/User.js';
+import { format_validation_errors } from '../../utils/helpers.js';
 
 async function create_user(email, username, password) {
     const new_user = new User({
@@ -11,16 +13,16 @@ async function create_user(email, username, password) {
     try {
         await new_user.validate(['email', 'username', 'password']);
     } catch (error) {
-        return { error: error.errors };
+        return { 'validation error': format_validation_errors(error.errors) };
     }
-    const errors = { error: [] };
+    const errors = { 'validation error': [] };
     if (await User.exists({ email: new_user.email })) {
-        errors.error.push('Email address already in use');
+        errors['validation error'].push('Email address already in use');
     }
     if (await User.exists({ username: new_user.username })) {
-        errors.error.push('Username already in use');
+        errors['validation error'].push('Username already in use');
     }
-    if (errors.error.length > 0) {
+    if (errors['validation error'].length > 0) {
         return errors;
     }
     new_user.password = await bcrypt.hash(new_user.password, 10);
@@ -44,11 +46,11 @@ async function login_user(email, password) {
     try {
         await user_input.validate(['email', 'password']);
     } catch (error) {
-        return { 'validation error': error.errors };
+        return { 'validation error': format_validation_errors(error.errors) };
     }
     const user = await User.findOne({ email: email }, 'email username password bio image');
     if (!user || !await bcrypt.compare(user_input.password, user.password)){
-        return { 'unauthorized error': 'Invalid email or password' };
+        return { 'auth error': 'Invalid email or password' };
     } else {
         return {
             user: {
@@ -65,23 +67,46 @@ async function login_user(email, password) {
 async function get_user(id) {
     const user = await User.findById(id, 'email username bio image');
     return {
-        email: user.email,
-        username: user.username,
-        bio: user.bio,
-        image: user.image
+        user: {
+            email: user.email,
+            username: user.username,
+            bio: user.bio,
+            image: user.image
+        }
     };
 }
 
 async function update_user(id, email, username, password, bio, image) {
-    const user = await User.findById(id);
+    const user = await User.findById(id, 'email username password bio image');
+    const errors = { 'validation error': [] };
     if (email) {
-        user.email = email;
+        if (validator.isEmail(email)) {
+            if (await User.exists({ email: email })) {
+                errors['validation error'].push('Email address already in use');
+            } else {
+                user.email = email;
+            }
+        } else {
+            errors['validation error'].push('Invalid email');
+        }
     }
     if (username) {
-        user.username = username;
+        if (validator.isAlphanumeric(username)) {
+            if (await User.exists({ username: username })) {
+                errors['validation error'].push('Username already in use');
+            } else {
+                user.username = username;
+            }
+        } else {
+            errors['validation error'].push('Invalid username');
+        }
     }
     if (password) {
-        user.password = password;
+        if (validator.isStrongPassword(password)) {
+            user.password = await bcrypt.hash(password, 10);
+        } else {
+            errors['validation error'].push('Invalid password');
+        }
     }
     if (bio) {
         user.bio = bio;
@@ -89,22 +114,9 @@ async function update_user(id, email, username, password, bio, image) {
     if (image) {
         user.image = image;
     }
-    try {
-        await user.validate(['email', 'username', 'password']);
-    } catch (error) {
-        return { error: error.errors };
-    }
-    const errors = { error: [] };
-    if (email && await User.exists({ email: user.email })) {
-        errors.error.push('Email address already in use');
-    }
-    if (username && await User.exists({ username: user.username })) {
-        errors.error.push('Username already in use');
-    }
-    if (errors.error.length > 0) {
+    if (errors['validation error'].length > 0) {
         return errors;
     }
-    user.password = await bcrypt.hash(user.password, 10);
     await user.save();
     return {
         user: {

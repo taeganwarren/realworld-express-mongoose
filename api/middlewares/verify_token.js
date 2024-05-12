@@ -8,12 +8,10 @@ function verify_token(optional) {
             token: undefined
         };
         if (req.headers.authorization) {
-            // TODO: Could this fail?
             const token = req.headers.authorization.split(' ')[1];
             jwt.verify(token, process.env.JWT_SECRET, (error, user) => {
                 if (error) {
-                    console.log(error);
-                    res.status(401).json({ error: 'Failed to authenticate token' });
+                    res.status(401).json({ 'auth error': 'Failed to authenticate token' });
                 } else {
                     req.user.id = user.id;
                     req.user.token = token;
@@ -24,7 +22,7 @@ function verify_token(optional) {
             if (optional) {
                 next();
             } else {
-                res.status(401).json({ error: 'No token provided' });
+                res.status(401).json({ 'auth error': 'No token provided' });
             }
         }
     };

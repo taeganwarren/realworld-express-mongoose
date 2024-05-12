@@ -13,7 +13,7 @@ const users_router = Router();
 users_router.post('/users', check_required_fields(['email', 'username', 'password']), (req, res) => {
     const { email, username, password } = req.body;
     create_user(email, username, password).then((response) => {
-        if (response.error) {
+        if (response['validation error']) {
             res.status(422).json(response);
         } else {
             res.status(201).json(response);
@@ -21,7 +21,7 @@ users_router.post('/users', check_required_fields(['email', 'username', 'passwor
     })
     .catch((error) => {
         console.log(error);
-        res.status(500).json({ error: 'Failed to create user. Internal server error.' });
+        res.status(500).json({ 'server error': 'Failed to create user. Internal server error.' });
     });
 });
 
@@ -30,7 +30,7 @@ users_router.post('/users/login', check_required_fields(['email', 'password']), 
     login_user(email, password).then((response) => {
         if (response['validation error']) {
             res.status(422).json(response);
-        } else if (response['unauthorized error']) {
+        } else if (response['auth error']) {
             res.status(401).json(response);
         } else {
             res.status(200).json(response);
@@ -38,19 +38,19 @@ users_router.post('/users/login', check_required_fields(['email', 'password']), 
     })
     .catch((error) => {
         console.log(error);
-        res.status(500).json({ error: 'Failed to login. Internal server error.' });
+        res.status(500).json({ 'server error': 'Failed to login. Internal server error.' });
     });
 });
 
 users_router.get('/user', verify_token(false), (req, res) => {
     const { id, token } = req.user;
     get_user(id).then((response) => {
-        response.token = token;
+        response.user.token = token;
         res.status(200).json(response);
     })
     .catch((error) => {
         console.log(error);
-        res.status(500).json({ error: 'Failed to get user. Internal server error.' });
+        res.status(500).json({ 'server error': 'Failed to get user. Internal server error.' });
     });
 });
 
@@ -58,16 +58,16 @@ users_router.put('/user', verify_token(false), check_optional_fields(['email', '
     const { id, token } = req.user;
     const { email, username, password, bio, image } = req.body;
     update_user(id, email, username, password, bio, image).then((response) => {
-        if (response.error) {
+        if (response['validation error']) {
             res.status(422).json(response);
         } else {
-            response.token = token;
+            response.user.token = token;
             res.status(200).json(response);
         }
     })
     .catch((error) => {
         console.log(error);
-        res.status(500).json({ error: 'Failed to update user. Internal server error.' });
+        res.status(500).json({ 'server error': 'Failed to update user. Internal server error.' });
     });
 });
 

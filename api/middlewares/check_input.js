@@ -9,7 +9,7 @@ function check_required_fields(fields) {
             }
         }
         if (errors.length > 0) {
-            res.status(422).json({ errors });
+            res.status(422).json({ 'input error': errors });
         } else {
             next();
         }
@@ -25,7 +25,7 @@ function check_optional_fields(fields) {
             }
         }
         if (errors.length > 0) {
-            res.status(422).json({ errors });
+            res.status(422).json({ 'input error': errors });
         } else {
             next();
         }
