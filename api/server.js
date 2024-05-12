@@ -7,6 +7,9 @@ const PORT = process.env.API_PORT;
 const app = express();
 app.use(express.json());
 app.use(v1_router);
+app.use('*', (req, res) => {
+    res.status(404).json({ 'error': 'not found' });
+});
 
 connect_to_database().then(() => {
     app.listen(PORT, () => {

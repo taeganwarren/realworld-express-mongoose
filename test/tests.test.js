@@ -374,4 +374,160 @@ describe('Tests', function() {
                 });
         });
     });
+    describe('GET /api/profiles/:username', function() {
+        it('should get user one profile with auth', function(done) {
+            chai.request(app)
+                .get('/api/profiles/test1')
+                .set('Authorization', `Token ${user_one_token}`)
+                .end(function(err, res) {
+                    expect(res).to.have.status(200);
+                    expect(res.body.profile.username).to.equal('test1');
+                    expect(res.body.profile.bio).to.equal('');
+                    expect(res.body.profile.image).to.equal('');
+                    expect(res.body.profile.following).to.equal(false);
+                    done();
+                });
+        });
+        it('should get user two profile with auth', function(done) {
+            chai.request(app)
+                .get('/api/profiles/test2updated')
+                .set('Authorization', `Token ${user_one_token}`)
+                .end(function(err, res) {
+                    expect(res).to.have.status(200);
+                    expect(res.body.profile.username).to.equal('test2updated');
+                    expect(res.body.profile.bio).to.equal('test2 bio');
+                    expect(res.body.profile.image).to.equal('test2 image');
+                    expect(res.body.profile.following).to.equal(false);
+                    done();
+                });
+        });
+        it('should not get a profile with invalid username', function(done) {
+            chai.request(app)
+                .get('/api/profiles/@#$%')
+                .set('Authorization', `Token ${user_one_token}`)
+                .end(function(err, res) {
+                    expect(res).to.have.status(421);
+                    expect(res.body['validation error']).to.equal('Invalid username');
+                    done();
+                });
+        });
+        it('should not get a profile with a non-existent username', function(done) {
+            chai.request(app)
+                .get('/api/profiles/nonexistent')
+                .set('Authorization', `Token ${user_one_token}`)
+                .end(function(err, res) {
+                    expect(res).to.have.status(404);
+                    expect(res.body['not found error']).to.equal('User not found');
+                    done();
+                });
+        });
+    });
+    describe('POST /api/profiles/:username/follow', function() {
+        it('should follow user two', function(done) {
+            chai.request(app)
+                .post('/api/profiles/test2updated/follow')
+                .set('Authorization', `Token ${user_one_token}`)
+                .end(function(err, res) {
+                    expect(res).to.have.status(200);
+                    expect(res.body.profile.username).to.equal('test2updated');
+                    expect(res.body.profile.bio).to.equal('test2 bio');
+                    expect(res.body.profile.image).to.equal('test2 image');
+                    expect(res.body.profile.following).to.equal(true);
+                    done();
+                });
+        });
+        it('should not follow user two again', function(done) {
+            chai.request(app)
+                .post('/api/profiles/test2updated/follow')
+                .set('Authorization', `Token ${user_one_token}`)
+                .end(function(err, res) {
+                    expect(res).to.have.status(421);
+                    expect(res.body['validation error']).to.equal('Already following user');
+                    done();
+                });
+        });
+        it('should check if user one is following user two', function(done) {
+            chai.request(app)
+                .get('/api/profiles/test2updated')
+                .set('Authorization', `Token ${user_one_token}`)
+                .end(function(err, res) {
+                    expect(res).to.have.status(200);
+                    expect(res.body.profile.username).to.equal('test2updated');
+                    expect(res.body.profile.bio).to.equal('test2 bio');
+                    expect(res.body.profile.image).to.equal('test2 image');
+                    expect(res.body.profile.following).to.equal(true);
+                    done();
+                });
+        });
+        it('check if following is false with no auth', function(done) {
+            chai.request(app)
+                .get('/api/profiles/test2updated')
+                .end(function(err, res) {
+                    expect(res).to.have.status(200);
+                    expect(res.body.profile.username).to.equal('test2updated');
+                    expect(res.body.profile.bio).to.equal('test2 bio');
+                    expect(res.body.profile.image).to.equal('test2 image');
+                    expect(res.body.profile.following).to.equal(false);
+                    done();
+                });
+        });
+        it('should not follow a profile with invalid username', function(done) {
+            chai.request(app)
+                .post('/api/profiles/#$%*))(/follow')
+                .set('Authorization', `Token ${user_one_token}`)
+                .end(function(err, res) {
+                    expect(res).to.have.status(404);
+                    expect(res.body['error']).to.equal('not found');
+                    done();
+                });
+        });
+        it('should not follow a profile with a non-existent username', function(done) {
+            chai.request(app)
+                .post('/api/profiles/nonexistent/follow')
+                .set('Authorization', `Token ${user_one_token}`)
+                .end(function(err, res) {
+                    expect(res).to.have.status(404);
+                    expect(res.body['not found error']).to.equal('User not found');
+                    done();
+                });
+        });
+    });
+    describe('DELETE /api/profiles/:username/follow', function() {
+        it('should unfollow user two', function(done) {
+            chai.request(app)
+                .delete('/api/profiles/test2updated/follow')
+                .set('Authorization', `Token ${user_one_token}`)
+                .end(function(err, res) {
+                    expect(res).to.have.status(200);
+                    expect(res.body.profile.username).to.equal('test2updated');
+                    expect(res.body.profile.bio).to.equal('test2 bio');
+                    expect(res.body.profile.image).to.equal('test2 image');
+                    expect(res.body.profile.following).to.equal(false);
+                    done();
+                });
+        });
+        it('should not unfollow user two again', function(done) {
+            chai.request(app)
+                .delete('/api/profiles/test2updated/follow')
+                .set('Authorization', `Token ${user_one_token}`)
+                .end(function(err, res) {
+                    expect(res).to.have.status(421);
+                    expect(res.body['validation error']).to.equal('Not following user');
+                    done();
+                });
+        });
+        it('should check if user one is not following user two', function(done) {
+            chai.request(app)
+                .get('/api/profiles/test2updated')
+                .set('Authorization', `Token ${user_one_token}`)
+                .end(function(err, res) {
+                    expect(res).to.have.status(200);
+                    expect(res.body.profile.username).to.equal('test2updated');
+                    expect(res.body.profile.bio).to.equal('test2 bio');
+                    expect(res.body.profile.image).to.equal('test2 image');
+                    expect(res.body.profile.following).to.equal(false);
+                    done();
+                });
+        });
+    });
 });
