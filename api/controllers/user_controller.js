@@ -48,7 +48,7 @@ async function login_user(email, password) {
     } catch (error) {
         return { 'validation error': format_validation_errors(error.errors) };
     }
-    const user = await User.findOne({ email: email }, 'email username password bio image');
+    const user = await User.findOne({ email: user_input.email }, 'email username password bio image');
     if (!user || !await bcrypt.compare(user_input.password, user.password)){
         return { 'auth error': 'Invalid email or password' };
     } else {

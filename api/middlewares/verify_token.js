@@ -1,7 +1,6 @@
 import jwt from 'jsonwebtoken';
 
-// TODO: change optional to required for better readability
-function verify_token(optional) {
+function verify_token(required) {
     return (req, res, next) => {
         req.user = {
             id: undefined,
@@ -19,10 +18,10 @@ function verify_token(optional) {
                 }
             });
         } else {
-            if (optional) {
-                next();
-            } else {
+            if (required) {
                 res.status(401).json({ 'auth error': 'No token provided' });
+            } else {
+                next();
             }
         }
     };

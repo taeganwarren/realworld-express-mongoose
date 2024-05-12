@@ -1,12 +1,15 @@
 import { Router } from 'express';
+import verify_token from '../middlewares/verify_token.js';
+import {
+    check_required_fields,
+    check_optional_fields
+} from '../middlewares/check_input.js';
 import {
     create_user,
     login_user,
     get_user,
     update_user
 } from '../controllers/user_controller.js';
-import verify_token from '../middlewares/verify_token.js';
-import { check_required_fields, check_optional_fields } from '../middlewares/check_input.js';
 
 const users_router = Router();
 
@@ -42,7 +45,7 @@ users_router.post('/users/login', check_required_fields(['email', 'password']), 
     });
 });
 
-users_router.get('/user', verify_token(false), (req, res) => {
+users_router.get('/user', verify_token(true), (req, res) => {
     const { id, token } = req.user;
     get_user(id).then((response) => {
         response.user.token = token;
@@ -54,7 +57,7 @@ users_router.get('/user', verify_token(false), (req, res) => {
     });
 });
 
-users_router.put('/user', verify_token(false), check_optional_fields(['email', 'username', 'password', 'bio', 'image']), (req, res) => {
+users_router.put('/user', verify_token(true), check_optional_fields(['email', 'username', 'password', 'bio', 'image']), (req, res) => {
     const { id, token } = req.user;
     const { email, username, password, bio, image } = req.body;
     update_user(id, email, username, password, bio, image).then((response) => {
