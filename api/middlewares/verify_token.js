@@ -4,7 +4,7 @@ import jwt from 'jsonwebtoken';
 // Verify token
 function verify_token(required) {
     return (req, res, next) => {
-        // Add use to request
+        // Add user to request
         req.user = {
             id: undefined,
             token: undefined

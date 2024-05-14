@@ -441,8 +441,11 @@ describe('Tests', function() {
                 .post('/api/profiles/test2updated/follow')
                 .set('Authorization', `Token ${user_one_token}`)
                 .end(function(err, res) {
-                    expect(res).to.have.status(421);
-                    expect(res.body['validation error']).to.equal('Already following user');
+                    expect(res).to.have.status(200);
+                    expect(res.body.profile.username).to.equal('test2updated');
+                    expect(res.body.profile.bio).to.equal('test2 bio');
+                    expect(res.body.profile.image).to.equal('test2 image');
+                    expect(res.body.profile.following).to.equal(true);
                     done();
                 });
         });
@@ -511,8 +514,11 @@ describe('Tests', function() {
                 .delete('/api/profiles/test2updated/follow')
                 .set('Authorization', `Token ${user_one_token}`)
                 .end(function(err, res) {
-                    expect(res).to.have.status(421);
-                    expect(res.body['validation error']).to.equal('Not following user');
+                    expect(res).to.have.status(200);
+                    expect(res.body.profile.username).to.equal('test2updated');
+                    expect(res.body.profile.bio).to.equal('test2 bio');
+                    expect(res.body.profile.image).to.equal('test2 image');
+                    expect(res.body.profile.following).to.equal(false);
                     done();
                 });
         });

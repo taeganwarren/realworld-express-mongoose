@@ -1,7 +1,9 @@
+// Imports
 import { Schema, model } from 'mongoose';
 import validator from 'validator';
 import bcrypt from 'bcrypt';
 
+// User schema
 const user_schema = new Schema({
     id: Schema.Types.ObjectId,
     email: {
@@ -56,10 +58,7 @@ const user_schema = new Schema({
     },
 });
 
-// TODO: add database actions as functions i can call here like follow, unfollow, favorite, unfavorite, etc
-// TODO: will need validation to make sure a followed user is a real user, a favorited article is a real article, etc
-// TODO: jwt functions
-
+// Pre save hook
 user_schema.pre('save', async function(next) {
     if (this.isModified('password')) {
         this.password = await bcrypt.hash(this.password, 10);
@@ -67,9 +66,28 @@ user_schema.pre('save', async function(next) {
     next();
 });
 
+// Compare passwords for logging in
 user_schema.methods.compare_password = async function(password) {
     return await bcrypt.compare(password, this.password);
 };
 
+// Follow and unfollow profiles
+user_schema.methods.follow = function(id) {
+    if (!this.following.includes(id)) {
+        this.following.push(id);
+    }
+};
+user_schema.methods.unfollow = function(id) {
+    if (this.following.includes(id)) {
+        this.following.pull(id);
+    }
+}
+user_schema.statics.check_following = function(following, id) {
+    return following.includes(id);
+};
+
+// User model
 const User = model('User', user_schema);
+
+// Exports
 export default User;

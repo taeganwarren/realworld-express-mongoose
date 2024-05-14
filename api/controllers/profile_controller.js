@@ -45,10 +45,8 @@ async function follow_profile(id, username) {
     }
     // Follow profile
     const user = await User.findById(id);
-    if (user.following.includes(profile._id)) {
-        return { 'validation error': 'Already following user' };
-    }
-    user.following.push(profile._id);
+    user.follow(profile._id);
+    const following = User.check_following(user.following, profile._id);
     // Save user
     await user.save();
     // Return profile
@@ -57,7 +55,7 @@ async function follow_profile(id, username) {
             username: profile.username,
             bio: profile.bio,
             image: profile.image,
-            following: true
+            following: following
         }
     };
 }
@@ -75,10 +73,8 @@ async function unfollow_profile(id, username) {
     }
     // Unfollow profile
     const user = await User.findById(id);
-    if (!user.following.includes(profile._id)) {
-        return { 'validation error': 'Not following user' };
-    }
-    user.following.pull(profile._id);
+    user.unfollow(profile._id);
+    const following = User.check_following(user.following, profile._id);
     // Save user
     await user.save();
     // Return profile
@@ -87,7 +83,7 @@ async function unfollow_profile(id, username) {
             username: profile.username,
             bio: profile.bio,
             image: profile.image,
-            following: false
+            following: following
         }
     };
 }
