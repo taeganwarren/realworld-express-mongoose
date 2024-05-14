@@ -14,9 +14,9 @@ const articles_router = Router();
 // POST api/articles
 articles_router.post('/articles', verify_token(true), (req, res) => {
     // Get fields from request
-    const { title, description, body, tags } = req.body;
     const { id } = req.user;
-    // TODO: check tags
+    const { title, description, body, tags } = req.body;
+    // Create article
     create_article(id, title, description, body, tags).then((response) => {
         if (response['validation error']) {
             res.status(422).json(response);

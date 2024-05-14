@@ -1,31 +1,29 @@
+// Imports
 import Article from '../models/Article.js';
-import validator from 'validator';
 import { format_validation_errors } from '../../utils/helpers.js';
-import slugify from 'slugify';
-import User from '../models/User.js';
 
+// Create article
 async function create_article(id, title, description, body, tags) {
-    const validation_errors = {};
-    for (const tag of tags) {
-        if (!validator.isLength(tag, { min: 1, max: 20 }) || !validator.isAlpha(tag)) {
-            validation_errors['tag'] = 'Invalid tag';
-        }
-    }
-    if (Object.keys(validation_errors).length > 0) {
-        return { 'validation error': validation_errors };
-    }
+    // Validate input
     const new_article = new Article({
         title: title,
         description: description,
-        body: body
+        body: body,
+        tag_list: tags
     });
-    // TODO: check if slug is unique
-    // TODO: submitting with valid token but non existent user crashes app
-    new_article.tag_list = tags;
+    try {
+        await new_article.validate(['title', 'description', 'body', 'tag_list']);
+    } catch (error) {
+        return { 'validation error': format_validation_errors(error.errors) };
+    }
+    // Set author and slug
     new_article.author = id;
-    new_article.slug = slugify(new_article.title, { lower: true });
+    new_article.slugify();
+    // Save article
     await new_article.save();
+    // Populate author field
     await new_article.populate('author');
+    // Return article
     return {
         article: {
             slug: new_article.slug,

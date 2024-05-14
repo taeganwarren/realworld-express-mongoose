@@ -20,7 +20,7 @@ const user_schema = new Schema({
         unique: true,
         required: 'Username is required',
         validate: {
-            validator: (username) => username.length >= 4 && validator.isAlphanumeric(username),
+            validator: (username) => validator.isLength(username, { min: 4 }) && validator.isAlphanumeric(username),
             message: 'Username must be at least 4 characters long and contain only letters and numbers'
         }
     },
@@ -36,7 +36,7 @@ const user_schema = new Schema({
         type: String,
         default: '',
         validate: {
-            validator: (bio) => bio.length <= 100,
+            validator: (bio) => validator.isLength(bio, { max: 100 }),
             message: 'Bio must be 100 characters or less'
         }
     },
