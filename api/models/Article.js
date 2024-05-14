@@ -1,5 +1,6 @@
 import { Schema, model, set } from 'mongoose';
 import validator from 'validator';
+import slugify from 'slugify';
 
 const article_schema = new Schema({
     id: Schema.Types.ObjectId,
@@ -7,9 +8,8 @@ const article_schema = new Schema({
         type: String,
         unique: true,
         required: true,
-        set: () => slugify(this.title, { lower: true }),
         validate: {
-            validator: (slug) => validator.isLength(slug, { min: 1, max: 100 }) && validator.isAlphanumeric(slug),
+            validator: (slug) => validator.isLength(slug, { min: 1, max: 100 }) && validator.isAscii(slug),
             message: 'Invalid slug'
         }
     },
@@ -17,7 +17,7 @@ const article_schema = new Schema({
         type: String,
         required: true,
         validate: {
-            validator: (title) => validator.isLength(title, { min: 1, max: 100 }) && validator.isAlphanumeric(title),
+            validator: (title) => validator.isLength(title, { min: 1, max: 100 }) && validator.isAscii(title),
             message: 'Invalid title'
         }
     },

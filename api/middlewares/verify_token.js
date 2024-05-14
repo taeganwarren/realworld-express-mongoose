@@ -1,11 +1,15 @@
+// Imports
 import jwt from 'jsonwebtoken';
 
+// Verify token
 function verify_token(required) {
     return (req, res, next) => {
+        // Add use to request
         req.user = {
             id: undefined,
             token: undefined
         };
+        // Verify token
         if (req.headers.authorization) {
             const token = req.headers.authorization.split(' ')[1];
             jwt.verify(token, process.env.JWT_SECRET, (error, user) => {
@@ -27,4 +31,5 @@ function verify_token(required) {
     };
 }
 
+// Exports
 export default verify_token;

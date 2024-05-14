@@ -72,8 +72,8 @@ describe('Tests', function() {
                 })
                 .end(function(err, res) {
                     expect(res).to.have.status(422);
-                    expect(res.body['validation error']).to.include('Invalid email');
-                    expect(res.body['validation error']).to.include('Invalid password');
+                    expect(res.body['validation error']).to.include('Email must be a valid email address');
+                    expect(res.body['validation error']).to.include('Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one number, and one special character');
                     done();
                 });
         });
@@ -87,9 +87,9 @@ describe('Tests', function() {
                 })
                 .end(function(err, res) {
                     expect(res).to.have.status(422);
-                    expect(res.body['input error']).to.include('email must be a string');
-                    expect(res.body['input error']).to.include('password must be a string');
-                    expect(res.body['input error']).to.include('username must be a string');
+                    expect(res.body['validation error']).to.include('Email must be a valid email address');
+                    expect(res.body['validation error']).to.include('Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one number, and one special character');
+                    expect(res.body['validation error']).to.include('Username must be at least 4 characters long and contain only letters and numbers');
                     done();
                 });
         });
@@ -153,8 +153,8 @@ describe('Tests', function() {
                 })
                 .end(function(err, res) {
                     expect(res).to.have.status(422);
-                    expect(res.body['validation error']).to.include('Invalid email');
-                    expect(res.body['validation error']).to.include('Invalid password');
+                    expect(res.body['validation error']).to.include('Email must be a valid email address');
+                    expect(res.body['validation error']).to.include('Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one number, and one special character');
                     done();
                 });
         });
@@ -167,8 +167,8 @@ describe('Tests', function() {
                 })
                 .end(function(err, res) {
                     expect(res).to.have.status(422);
-                    expect(res.body['input error']).to.include('email must be a string');
-                    expect(res.body['input error']).to.include('password must be a string');
+                    expect(res.body['validation error']).to.include('Email must be a valid email address');
+                    expect(res.body['validation error']).to.include('Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one number, and one special character');
                     done();
                 });
         });
@@ -180,7 +180,7 @@ describe('Tests', function() {
                 })
                 .end(function(err, res) {
                     expect(res).to.have.status(422);
-                    expect(res.body['input error']).to.include('Missing password');
+                    expect(res.body['validation error']).to.include('Password is required');
                     done();
                 });
         });
@@ -312,9 +312,9 @@ describe('Tests', function() {
                 })
                 .end(function(err, res) {
                     expect(res).to.have.status(422);
-                    expect(res.body['validation error']).to.include('Invalid email');
-                    expect(res.body['validation error']).to.include('Invalid username');
-                    expect(res.body['validation error']).to.include('Invalid password');
+                    expect(res.body['validation error']).to.include('Email must be a valid email address');
+                    expect(res.body['validation error']).to.include('Username must be at least 4 characters long and contain only letters and numbers');
+                    expect(res.body['validation error']).to.include('Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one number, and one special character');
                     done();
                 });
         });
@@ -329,9 +329,9 @@ describe('Tests', function() {
                 })
                 .end(function(err, res) {
                     expect(res).to.have.status(422);
-                    expect(res.body['input error']).to.include('email must be a string');
-                    expect(res.body['input error']).to.include('password must be a string');
-                    expect(res.body['input error']).to.include('username must be a string');
+                    expect(res.body['validation error']).to.include('Email must be a valid email address');
+                    expect(res.body['validation error']).to.include('Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one number, and one special character');
+                    expect(res.body['validation error']).to.include('Username must be at least 4 characters long and contain only letters and numbers');
                     done();
                 });
         });
@@ -407,7 +407,7 @@ describe('Tests', function() {
                 .set('Authorization', `Token ${user_one_token}`)
                 .end(function(err, res) {
                     expect(res).to.have.status(421);
-                    expect(res.body['validation error']).to.equal('Invalid username');
+                    expect(res.body['validation error']).to.equal('Username must be at least 4 characters long and contain only letters and numbers');
                     done();
                 });
         });

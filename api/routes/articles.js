@@ -1,16 +1,19 @@
+// Imports
 import { Router } from 'express';
-import { check_required_fields } from '../middlewares/check_input';
-import verify_token from '../middlewares/verify_token';
+import verify_token from '../middlewares/verify_token.js';
 import {
     create_article,
     get_article,
     update_article,
     delete_article
-} from '../controllers/article_controller';
+} from '../controllers/article_controller.js';
 
+// Constants
 const articles_router = Router();
 
-articles_router.post('/articles', check_required_fields('title', 'description', 'body'), verify_token(true), (req, res) => {
+// POST api/articles
+articles_router.post('/articles', verify_token(true), (req, res) => {
+    // Get fields from request
     const { title, description, body, tags } = req.body;
     const { id } = req.user;
     // TODO: check tags
@@ -27,16 +30,20 @@ articles_router.post('/articles', check_required_fields('title', 'description', 
     });
 });
 
+// GET api/articles/:slug
 articles_router.get('/articles/:slug', (req, res) => {
 
 });
 
+// PUT api/articles/:slug
 articles_router.put('/articles/:slug', (req, res) => {
 
 });
 
+// DELETE api/articles/:slug
 articles_router.delete('/articles/:slug', (req, res) => {
 
 });
 
+// Exports
 export default articles_router;

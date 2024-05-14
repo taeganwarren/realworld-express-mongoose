@@ -1,9 +1,6 @@
+// Imports
 import { Router } from 'express';
 import verify_token from '../middlewares/verify_token.js';
-import {
-    check_required_fields,
-    check_optional_fields
-} from '../middlewares/check_input.js';
 import {
     create_user,
     login_user,
@@ -11,10 +8,14 @@ import {
     update_user
 } from '../controllers/user_controller.js';
 
+// Constants
 const users_router = Router();
 
-users_router.post('/users', check_required_fields(['email', 'username', 'password']), (req, res) => {
+// POST api/users
+users_router.post('/users', (req, res) => {
+    // Get fields from request
     const { email, username, password } = req.body;
+    // Create user
     create_user(email, username, password).then((response) => {
         if (response['validation error']) {
             res.status(422).json(response);
@@ -28,8 +29,11 @@ users_router.post('/users', check_required_fields(['email', 'username', 'passwor
     });
 });
 
-users_router.post('/users/login', check_required_fields(['email', 'password']), (req, res) => {
+// POST api/users/login
+users_router.post('/users/login', (req, res) => {
+    // Get fields from request
     const { email, password } = req.body;
+    // Login user
     login_user(email, password).then((response) => {
         if (response['validation error']) {
             res.status(422).json(response);
@@ -45,8 +49,11 @@ users_router.post('/users/login', check_required_fields(['email', 'password']), 
     });
 });
 
+// GET api/user
 users_router.get('/user', verify_token(true), (req, res) => {
+    // Get fields from request
     const { id, token } = req.user;
+    // Get user
     get_user(id).then((response) => {
         response.user.token = token;
         res.status(200).json(response);
@@ -57,9 +64,12 @@ users_router.get('/user', verify_token(true), (req, res) => {
     });
 });
 
-users_router.put('/user', verify_token(true), check_optional_fields(['email', 'username', 'password', 'bio', 'image']), (req, res) => {
+// PUT api/user
+users_router.put('/user', verify_token(true), (req, res) => {
+    // Get fields from request
     const { id, token } = req.user;
     const { email, username, password, bio, image } = req.body;
+    // Update user
     update_user(id, email, username, password, bio, image).then((response) => {
         if (response['validation error']) {
             res.status(422).json(response);
@@ -74,4 +84,5 @@ users_router.put('/user', verify_token(true), check_optional_fields(['email', 'u
     });
 });
 
+// Exports
 export default users_router;
