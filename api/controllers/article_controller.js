@@ -5,13 +5,13 @@ import User from '../models/User.js';
 import { format_validation_errors } from '../../utils/helpers.js';
 
 // Create article
-async function create_article(id, title, description, body, tags) {
+async function create_article(id, title, description, body, tag_list) {
     // Validate input
     const new_article = new Article({
         title: title,
         description: description,
         body: body,
-        tag_list: tags,
+        tag_list: tag_list,
         author: id
     });
     try {

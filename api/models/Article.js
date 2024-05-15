@@ -1,5 +1,5 @@
 // Imports
-import { Schema, model } from 'mongoose';
+import { Schema, Types, model } from 'mongoose';
 import validator from 'validator';
 import slugify from 'slugify';
 
@@ -9,11 +9,6 @@ const article_schema = new Schema({
     slug: {
         type: String,
         unique: true,
-        required: true,
-        validate: {
-            validator: (slug) => validator.isLength(slug, { min: 1, max: 100 }) && validator.isAscii(slug),
-            message: 'Invalid slug'
-        }
     },
     title: {
         type: String,
@@ -65,11 +60,11 @@ const article_schema = new Schema({
     }
 });
 
-// Pre validate hook
-// TODO: Needs to make sure that the slug is unique
-article_schema.pre('validate', function(next) {
+// Pre save hook
+article_schema.pre('save', function(next) {
     if (this.isNew) {
-        this.slug = slugify(this.title, { lower: true });
+        this._id = new Types.ObjectId();
+        this.slug = slugify(this.title, { lower: true }) + '-' + this._id.toString();
     }
     next();
 });
