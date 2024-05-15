@@ -11,16 +11,14 @@ async function create_article(id, title, description, body, tags) {
         title: title,
         description: description,
         body: body,
-        tag_list: tags
+        tag_list: tags,
+        author: id
     });
     try {
         await new_article.validate(['title', 'description', 'body', 'tag_list']);
     } catch (error) {
         return { 'validation error': format_validation_errors(error.errors) };
     }
-    // Set author and slug
-    new_article.author = id;
-    new_article.slugify();
     // Save article
     await new_article.save();
     // Populate author field
@@ -94,8 +92,26 @@ async function update_article() {
 }
 
 // Delete article
-async function delete_article() {
-
+async function delete_article(id, slug) {
+    // Validate input
+    if (validator.isLength(slug, { min: 1, max: 100 }) && !validator.isAscii(slug)) {
+        return { 'validation error': 'Invalid slug' };
+    }
+    // Find article
+    const article = await Article.findOne({ slug: slug });
+    if (!article) {
+        return { 'not found error': 'Article not found' };
+    }
+    // Check if user is author
+    if (article.author != id) {
+        return { 'auth error': 'User not authorized to delete article' };
+    }
+    // Delete article
+    await Article.deleteOne({ slug: slug });
+    // Return success
+    return {
+        'success': 'Article deleted'
+    };
 }
 
 export {
