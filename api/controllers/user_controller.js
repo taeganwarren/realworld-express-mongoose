@@ -67,7 +67,7 @@ async function login_user(email, password) {
             bio: user.bio,
             image: user.image
         }
-    }
+    };
 }
 
 // Get user

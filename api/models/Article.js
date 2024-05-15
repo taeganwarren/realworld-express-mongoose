@@ -49,19 +49,19 @@ const article_schema = new Schema({
     },
     created_at: {
         type: Date,
-        default: Date.now,
+        default: Date.now
     },
     updated_at: {
         type: Date,
-        default: Date.now,
+        default: Date.now
     },
     favorites_count: {
         type: Number,
-        default: 0,
+        default: 0
     },
     author: {
         type: Schema.Types.ObjectId,
-        ref: 'User',
+        ref: 'User'
     }
 });
 

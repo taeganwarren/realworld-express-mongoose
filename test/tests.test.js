@@ -268,7 +268,7 @@ describe('Tests', function() {
                 .set('Authorization', `Token ${user_one_token}`)
                 .send({
                     email: 'test1updated@test.com',
-                    password: 'Pa$$w0rd1#_updated',
+                    password: 'Pa$$w0rd1#_updated'
                 })
                 .end(function(err, res) {
                     expect(res).to.have.status(200);

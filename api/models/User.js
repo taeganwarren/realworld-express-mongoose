@@ -55,7 +55,7 @@ const user_schema = new Schema({
     articles: {
         type: [{ type: Schema.Types.ObjectId, ref: 'Article' }],
         default: []
-    },
+    }
 });
 
 // Pre save hook
@@ -81,7 +81,7 @@ user_schema.methods.unfollow = function(id) {
     if (this.following.includes(id)) {
         this.following.pull(id);
     }
-}
+};
 user_schema.statics.check_following = function(following, id) {
     return following.includes(id);
 };

@@ -10,4 +10,4 @@ function format_validation_errors(errors) {
 // Exports
 export {
     format_validation_errors
-}
+};

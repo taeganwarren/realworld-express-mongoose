@@ -42,7 +42,7 @@ async function create_article(id, title, description, body, tags) {
                 following: false
             }
         }
-    }
+    };
 }
 
 // Get article
