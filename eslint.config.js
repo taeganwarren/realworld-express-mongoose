@@ -7,7 +7,9 @@ export default [
     {
         languageOptions: {
             globals: globals.node
-        },
+        }
+    },
+    {
         plugins: {
             '@stylistic/js': stylisticJs
         },
@@ -15,7 +17,12 @@ export default [
             '@stylistic/js/indent': ['error', 4],
             '@stylistic/js/quotes': ['error', 'single'],
             '@stylistic/js/semi': ['error', 'always'],
-            '@stylistic/js/comma-dangle': 'error'
+            '@stylistic/js/comma-dangle': 'error',
+            '@stylistic/js/semi-style': ['error', 'last'],
+            '@stylistic/js/semi-spacing': 'error',
+            '@stylistic/js/arrow-spacing': 'error',
+            '@stylistic/js/object-curly-spacing': ['error', 'always'],
+            '@stylistic/js/brace-style': ['error', '1tbs']
         }
     },
     pluginJs.configs.recommended,
