@@ -14,7 +14,9 @@ function verify_token(required) {
             const token = req.headers.authorization.split(' ')[1];
             jwt.verify(token, process.env.JWT_SECRET, (error, user) => {
                 if (error) {
-                    res.status(401).json({ 'auth error': 'Failed to authenticate token' });
+                    res.status(401).json({
+                        'auth error': 'Failed to authenticate token' 
+                    });
                 } else {
                     req.user.id = user.id;
                     req.user.token = token;
@@ -23,7 +25,9 @@ function verify_token(required) {
             });
         } else {
             if (required) {
-                res.status(401).json({ 'auth error': 'No token provided' });
+                res.status(401).json({
+                    'auth error': 'No token provided' 
+                });
             } else {
                 next();
             }

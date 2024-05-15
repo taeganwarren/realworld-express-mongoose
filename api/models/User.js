@@ -1,5 +1,7 @@
 // Imports
-import { Schema, model } from 'mongoose';
+import {
+    Schema, model 
+} from 'mongoose';
 import validator from 'validator';
 import bcrypt from 'bcrypt';
 
@@ -11,7 +13,9 @@ const user_schema = new Schema({
         unique: true,
         required: 'Email is required',
         validate: {
-            validator: (email) => validator.isEmail(email),
+            validator: (email) => {
+                return validator.isEmail(email);
+            },
             message: 'Email must be a valid email address'
         }
     },
@@ -20,7 +24,11 @@ const user_schema = new Schema({
         unique: true,
         required: 'Username is required',
         validate: {
-            validator: (username) => validator.isLength(username, { min: 4 }) && validator.isAlphanumeric(username),
+            validator: (username) => {
+                return validator.isLength(username, {
+                    min: 4 
+                }) && validator.isAlphanumeric(username);
+            },
             message: 'Username must be at least 4 characters long and contain only letters and numbers'
         }
     },
@@ -28,7 +36,9 @@ const user_schema = new Schema({
         type: String,
         required: 'Password is required',
         validate: {
-            validator: (password) => validator.isStrongPassword(password),
+            validator: (password) => {
+                return validator.isStrongPassword(password);
+            },
             message: 'Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one number, and one special character'
         }
     },
@@ -36,7 +46,11 @@ const user_schema = new Schema({
         type: String,
         default: '',
         validate: {
-            validator: (bio) => validator.isLength(bio, { max: 100 }),
+            validator: (bio) => {
+                return validator.isLength(bio, {
+                    max: 100 
+                });
+            },
             message: 'Bio must be 100 characters or less'
         }
     },
@@ -45,15 +59,21 @@ const user_schema = new Schema({
         default: ''
     },
     following: {
-        type: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+        type: [{
+            type: Schema.Types.ObjectId, ref: 'User' 
+        }],
         default: []
     },
     favorites: {
-        type: [{ type: Schema.Types.ObjectId, ref: 'Article' }],
+        type: [{
+            type: Schema.Types.ObjectId, ref: 'Article' 
+        }],
         default: []
     },
     articles: {
-        type: [{ type: Schema.Types.ObjectId, ref: 'Article' }],
+        type: [{
+            type: Schema.Types.ObjectId, ref: 'Article' 
+        }],
         default: []
     }
 });

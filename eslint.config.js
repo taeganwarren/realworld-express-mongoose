@@ -22,7 +22,13 @@ export default [
             '@stylistic/js/semi-spacing': 'error',
             '@stylistic/js/arrow-spacing': 'error',
             '@stylistic/js/object-curly-spacing': ['error', 'always'],
-            '@stylistic/js/brace-style': ['error', '1tbs']
+            '@stylistic/js/brace-style': ['error', '1tbs'],
+            '@stylistic/js/object-curly-newline': ['error', 'always'],
+            '@stylistic/js/no-confusing-arrow': 'error',
+            '@stylistic/js/block-spacing': 'error',
+            '@stylistic/js/arrow-parens': 'error',
+            'curly': 'error',
+            'arrow-body-style': ['error', 'always']
         }
     },
     pluginJs.configs.recommended,

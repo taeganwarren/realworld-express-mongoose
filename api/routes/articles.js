@@ -1,5 +1,7 @@
 // Imports
-import { Router } from 'express';
+import {
+    Router 
+} from 'express';
 import verify_token from '../middlewares/verify_token.js';
 import {
     create_article,
@@ -14,8 +16,12 @@ const articles_router = Router();
 // POST api/articles
 articles_router.post('/articles', verify_token(true), (req, res) => {
     // Get fields from request
-    const { id } = req.user;
-    const { title, description, body, tag_list } = req.body;
+    const {
+        id 
+    } = req.user;
+    const {
+        title, description, body, tag_list 
+    } = req.body;
     // Create article
     create_article(id, title, description, body, tag_list)
         .then((response) => {
@@ -27,15 +33,21 @@ articles_router.post('/articles', verify_token(true), (req, res) => {
         })
         .catch((error) => {
             console.log(error);
-            res.status(500).json({ 'server error': 'Failed to create article. Internal server error.' });
+            res.status(500).json({
+                'server error': 'Failed to create article. Internal server error.' 
+            });
         });
 });
 
 // GET api/articles/:slug
 articles_router.get('/articles/:slug', verify_token(false), (req, res) => {
     // Get fields from request
-    const { id } = req.user;
-    const { slug } = req.params;
+    const {
+        id 
+    } = req.user;
+    const {
+        slug 
+    } = req.params;
     // Get article
     get_article(id, slug)
         .then((response) => {
@@ -49,7 +61,9 @@ articles_router.get('/articles/:slug', verify_token(false), (req, res) => {
         })
         .catch((error) => {
             console.log(error);
-            res.status(500).json({ 'server error': 'Failed to get article. Internal server error.' });
+            res.status(500).json({
+                'server error': 'Failed to get article. Internal server error.' 
+            });
         });
 });
 
@@ -61,8 +75,12 @@ articles_router.put('/articles/:slug', verify_token(true), (req, res) => {
 // DELETE api/articles/:slug
 articles_router.delete('/articles/:slug', verify_token(true), (req, res) => {
     // Get fields from request
-    const { id } = req.user;
-    const { slug } = req.params;
+    const {
+        id 
+    } = req.user;
+    const {
+        slug 
+    } = req.params;
     // Delete article
     delete_article(id, slug)
         .then((response) => {
@@ -78,7 +96,9 @@ articles_router.delete('/articles/:slug', verify_token(true), (req, res) => {
         })
         .catch((error) => {
             console.log(error);
-            res.status(500).json({ 'server error': 'Failed to delete article. Internal server error.' });
+            res.status(500).json({
+                'server error': 'Failed to delete article. Internal server error.' 
+            });
         });
 });
 

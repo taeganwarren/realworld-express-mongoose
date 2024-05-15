@@ -1,5 +1,7 @@
 // Imports
-import { Schema, Types, model } from 'mongoose';
+import {
+    Schema, Types, model 
+} from 'mongoose';
 import validator from 'validator';
 import slugify from 'slugify';
 
@@ -8,13 +10,17 @@ const article_schema = new Schema({
     id: Schema.Types.ObjectId,
     slug: {
         type: String,
-        unique: true,
+        unique: true
     },
     title: {
         type: String,
         required: true,
         validate: {
-            validator: (title) => validator.isLength(title, { min: 1, max: 100 }) && validator.isAscii(title),
+            validator: (title) => {
+                return validator.isLength(title, {
+                    min: 1, max: 100 
+                }) && validator.isAscii(title);
+            },
             message: 'Title must be between 1 and 100 characters long and contain only ASCII characters'
         }
     },
@@ -22,7 +28,11 @@ const article_schema = new Schema({
         type: String,
         required: true,
         validate: {
-            validator: (description) => validator.isLength(description, { min: 1, max: 200 }) && validator.isAscii(description),
+            validator: (description) => {
+                return validator.isLength(description, {
+                    min: 1, max: 200 
+                }) && validator.isAscii(description);
+            },
             message: 'Description must be between 1 and 200 characters long and contain only ASCII characters'
         }
     },
@@ -30,7 +40,11 @@ const article_schema = new Schema({
         type: String,
         required: true,
         validate: {
-            validator: (body) => validator.isLength(body, { min: 1, max: 10000 }) && validator.isAscii(body),
+            validator: (body) => {
+                return validator.isLength(body, {
+                    min: 1, max: 10000 
+                }) && validator.isAscii(body);
+            },
             message: 'Body must be between 1 and 10000 characters long and contain only ASCII characters'
         }
     },
@@ -38,7 +52,13 @@ const article_schema = new Schema({
         type: [String],
         default: [],
         validate: {
-            validator: (tag_list) => tag_list.every((tag) => validator.isLength(tag, { min: 1, max: 20 }) && validator.isAlpha(tag)),
+            validator: (tag_list) => {
+                return tag_list.every((tag) => {
+                    return validator.isLength(tag, {
+                        min: 1, max: 20 
+                    }) && validator.isAlpha(tag);
+                });
+            },
             message: 'Tags must be between 1 and 20 characters long and contain only letters'
         }
     },
@@ -64,7 +84,9 @@ const article_schema = new Schema({
 article_schema.pre('save', function(next) {
     if (this.isNew) {
         this._id = new Types.ObjectId();
-        this.slug = slugify(this.title, { lower: true }) + '-' + this._id.toString();
+        this.slug = slugify(this.title, {
+            lower: true 
+        }) + '-' + this._id.toString();
     }
     next();
 });

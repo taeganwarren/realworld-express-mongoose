@@ -6,12 +6,18 @@ import User from '../models/User.js';
 async function get_profile(id, username) {
     // Validate username
     if (username.length < 4 && !validator.isAlphanumeric(username)) {
-        return { 'validation error': 'Username must be at least 4 characters long and contain only letters and numbers' };
+        return {
+            'validation error': 'Username must be at least 4 characters long and contain only letters and numbers' 
+        };
     }
     // Find profile
-    const profile = await User.findOne({ username: username }, 'username bio image');
+    const profile = await User.findOne({
+        username: username 
+    }, 'username bio image');
     if (!profile) {
-        return { 'not found error': 'User not found' };
+        return {
+            'not found error': 'User not found' 
+        };
     }
     // Check if user is following profile
     let is_following = false;
@@ -36,12 +42,18 @@ async function get_profile(id, username) {
 async function follow_profile(id, username) {
     // Validate username
     if (username.length < 4 && !validator.isAlphanumeric(username)) {
-        return { 'validation error': 'Username must be at least 4 characters long and contain only letters and numbers' };
+        return {
+            'validation error': 'Username must be at least 4 characters long and contain only letters and numbers' 
+        };
     }
     // Find profile
-    const profile = await User.findOne({ username: username });
+    const profile = await User.findOne({
+        username: username 
+    });
     if (!profile) {
-        return { 'not found error': 'User not found' };
+        return {
+            'not found error': 'User not found' 
+        };
     }
     // Follow profile
     const user = await User.findById(id);
@@ -64,12 +76,18 @@ async function follow_profile(id, username) {
 async function unfollow_profile(id, username) {
     // Validate username
     if (username.length < 4 && !validator.isAlphanumeric(username)) {
-        return { 'validation error': 'Username must be at least 4 characters long and contain only letters and numbers' };
+        return {
+            'validation error': 'Username must be at least 4 characters long and contain only letters and numbers' 
+        };
     }
     // Find profile
-    const profile = await User.findOne({ username: username });
+    const profile = await User.findOne({
+        username: username 
+    });
     if (!profile) {
-        return { 'not found error': 'User not found' };
+        return {
+            'not found error': 'User not found' 
+        };
     }
     // Unfollow profile
     const user = await User.findById(id);

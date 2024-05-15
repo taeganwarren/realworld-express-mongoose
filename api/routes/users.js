@@ -1,5 +1,7 @@
 // Imports
-import { Router } from 'express';
+import {
+    Router 
+} from 'express';
 import verify_token from '../middlewares/verify_token.js';
 import {
     create_user,
@@ -14,7 +16,9 @@ const users_router = Router();
 // POST api/users
 users_router.post('/users', (req, res) => {
     // Get fields from request
-    const { email, username, password } = req.body;
+    const {
+        email, username, password 
+    } = req.body;
     // Create user
     create_user(email, username, password)
         .then((response) => {
@@ -26,14 +30,18 @@ users_router.post('/users', (req, res) => {
         })
         .catch((error) => {
             console.log(error);
-            res.status(500).json({ 'server error': 'Failed to create user. Internal server error.' });
+            res.status(500).json({
+                'server error': 'Failed to create user. Internal server error.' 
+            });
         });
 });
 
 // POST api/users/login
 users_router.post('/users/login', (req, res) => {
     // Get fields from request
-    const { email, password } = req.body;
+    const {
+        email, password 
+    } = req.body;
     // Login user
     login_user(email, password)
         .then((response) => {
@@ -47,14 +55,18 @@ users_router.post('/users/login', (req, res) => {
         })
         .catch((error) => {
             console.log(error);
-            res.status(500).json({ 'server error': 'Failed to login. Internal server error.' });
+            res.status(500).json({
+                'server error': 'Failed to login. Internal server error.' 
+            });
         });
 });
 
 // GET api/user
 users_router.get('/user', verify_token(true), (req, res) => {
     // Get fields from request
-    const { id, token } = req.user;
+    const {
+        id, token 
+    } = req.user;
     // Get user
     get_user(id)
         .then((response) => {
@@ -63,15 +75,21 @@ users_router.get('/user', verify_token(true), (req, res) => {
         })
         .catch((error) => {
             console.log(error);
-            res.status(500).json({ 'server error': 'Failed to get user. Internal server error.' });
+            res.status(500).json({
+                'server error': 'Failed to get user. Internal server error.' 
+            });
         });
 });
 
 // PUT api/user
 users_router.put('/user', verify_token(true), (req, res) => {
     // Get fields from request
-    const { id, token } = req.user;
-    const { email, username, password, bio, image } = req.body;
+    const {
+        id, token 
+    } = req.user;
+    const {
+        email, username, password, bio, image 
+    } = req.body;
     // Update user
     update_user(id, email, username, password, bio, image)
         .then((response) => {
@@ -84,7 +102,9 @@ users_router.put('/user', verify_token(true), (req, res) => {
         })
         .catch((error) => {
             console.log(error);
-            res.status(500).json({ 'server error': 'Failed to update user. Internal server error.' });
+            res.status(500).json({
+                'server error': 'Failed to update user. Internal server error.' 
+            });
         });
 });
 

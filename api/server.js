@@ -11,7 +11,9 @@ const app = express();
 app.use(express.json());
 app.use(v1_router);
 app.use('*', (req, res) => {
-    res.status(404).json({ 'error': 'not found' });
+    res.status(404).json({
+        'error': 'not found' 
+    });
 });
 
 // Start server
