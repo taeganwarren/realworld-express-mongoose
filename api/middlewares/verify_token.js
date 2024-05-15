@@ -10,7 +10,7 @@ function verify_token(required) {
             token: undefined
         };
         // Verify token
-        if (req.headers.authorization) {
+        if (req.headers.authorization || req.headers.Authorization) {
             const token = req.headers.authorization.split(' ')[1];
             jwt.verify(token, process.env.JWT_SECRET, (error, user) => {
                 if (error) {

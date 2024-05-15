@@ -31,17 +31,31 @@ articles_router.post('/articles', verify_token(true), (req, res) => {
 });
 
 // GET api/articles/:slug
-articles_router.get('/articles/:slug', (req, res) => {
-
+articles_router.get('/articles/:slug', verify_token(false), (req, res) => {
+    // Get fields from request
+    const { id } = req.user;
+    const { slug } = req.params;
+    // Get article
+    get_article(id, slug).then((response) => {
+        if (response['not found error']) {
+            res.status(404).json(response);
+        } else {
+            res.status(200).json(response);
+        }
+    })
+    .catch((error) => {
+        console.log(error);
+        res.status(500).json({ 'server error': 'Failed to get article. Internal server error.' });
+    });
 });
 
 // PUT api/articles/:slug
-articles_router.put('/articles/:slug', (req, res) => {
+articles_router.put('/articles/:slug', verify_token(true), (req, res) => {
 
 });
 
 // DELETE api/articles/:slug
-articles_router.delete('/articles/:slug', (req, res) => {
+articles_router.delete('/articles/:slug', verify_token(true), (req, res) => {
 
 });
 

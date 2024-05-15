@@ -66,10 +66,13 @@ const article_schema = new Schema({
 });
 
 // Slugify title
-// TODO: Needs to make sure that the slug is unique and is less than 100 characters
+// TODO: Needs to make sure that the slug is unique and is less than 100 characters and set better error messages
 article_schema.methods.slugify = function() {
     this.slug = slugify(this.title, { lower: true });
 };
 
+// Article model
 const Article = model('Article', article_schema);
+
+// Exports
 export default Article;

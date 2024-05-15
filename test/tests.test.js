@@ -12,6 +12,7 @@ describe('Tests', function() {
     before(async function() {
         await User.deleteMany();
     });
+
     describe('POST /api/users', function() {
         it('should create user one', function(done) {
             chai.request(app)
@@ -30,6 +31,7 @@ describe('Tests', function() {
                     done();
                 });
         });
+
         it('should create user two', function(done) {
             chai.request(app)
                 .post('/api/users')
@@ -47,6 +49,7 @@ describe('Tests', function() {
                     done();
                 });
         });
+
         it('should not create a user with the same email and username', function(done) {
             chai.request(app)
                 .post('/api/users')
@@ -62,6 +65,7 @@ describe('Tests', function() {
                     done();
                 });
         });
+
         it('should not create a user with an invalid email and password', function(done) {
             chai.request(app)
                 .post('/api/users')
@@ -77,6 +81,7 @@ describe('Tests', function() {
                     done();
                 });
         });
+
         it('should not create a user with invalid input', function(done) {
             chai.request(app)
                 .post('/api/users')
@@ -94,6 +99,7 @@ describe('Tests', function() {
                 });
         });
     });
+
     describe('POST /api/users/login', function() {
         it('should login user one', function(done) {
             chai.request(app)
@@ -113,6 +119,7 @@ describe('Tests', function() {
                     done();
                 });
         });
+
         it('should login user two', function(done) {
             chai.request(app)
                 .post('/api/users/login')
@@ -131,6 +138,7 @@ describe('Tests', function() {
                     done();
                 });
         });
+
         it('should not login a user that doesnt exist', function(done) {
             chai.request(app)
                 .post('/api/users/login')
@@ -144,6 +152,7 @@ describe('Tests', function() {
                     done();
                 });
         });
+
         it('should not login a user with an invalid email and password', function(done) {
             chai.request(app)
                 .post('/api/users/login')
@@ -158,6 +167,7 @@ describe('Tests', function() {
                     done();
                 });
         });
+
         it('should not login a user with invalid input', function(done) {
             chai.request(app)
                 .post('/api/users/login')
@@ -172,6 +182,7 @@ describe('Tests', function() {
                     done();
                 });
         });
+
         it('should not login a user without a password', function(done) {
             chai.request(app)
                 .post('/api/users/login')
@@ -185,6 +196,7 @@ describe('Tests', function() {
                 });
         });
     });
+
     describe('GET /api/user', function() {
         it('should get user one', function(done) {
             chai.request(app)
@@ -200,6 +212,7 @@ describe('Tests', function() {
                     done();
                 });
         });
+
         it('should get user two', function(done) {
             chai.request(app)
                 .get('/api/user')
@@ -214,6 +227,7 @@ describe('Tests', function() {
                     done();
                 });
         });
+
         it('should not get a user without a token', function(done) {
             chai.request(app)
                 .get('/api/user')
@@ -223,6 +237,7 @@ describe('Tests', function() {
                     done();
                 });
         });
+
         it('should not get a user with an invalid token', function(done) {
             chai.request(app)
                 .get('/api/user')
@@ -233,6 +248,7 @@ describe('Tests', function() {
                     done();
                 });
         });
+
         it('should not get a user with another invalid token', function(done) {
             chai.request(app)
                 .get('/api/user')
@@ -244,6 +260,7 @@ describe('Tests', function() {
                 });
         });
     });
+
     describe('PUT /api/user', function() {
         it('should update user one', function(done) {
             chai.request(app)
@@ -263,6 +280,7 @@ describe('Tests', function() {
                     done();
                 });
         });
+
         it('should update user two', function(done) {
             chai.request(app)
                 .put('/api/user')
@@ -283,6 +301,7 @@ describe('Tests', function() {
                     done();
                 });
         });
+
         it('should log in user one with updated email and password', function(done) {
             chai.request(app)
                 .post('/api/users/login')
@@ -301,6 +320,7 @@ describe('Tests', function() {
                     done();
                 });
         });
+
         it('should not update a user with an invalid email and password', function(done) {
             chai.request(app)
                 .put('/api/user')
@@ -318,6 +338,7 @@ describe('Tests', function() {
                     done();
                 });
         });
+
         it('should not update a user with invalid input', function(done) {
             chai.request(app)
                 .put('/api/user')
@@ -335,6 +356,7 @@ describe('Tests', function() {
                     done();
                 });
         });
+
         it('should not update a user without a token', function(done) {
             chai.request(app)
                 .put('/api/user')
@@ -347,6 +369,7 @@ describe('Tests', function() {
                     done();
                 });
         });
+
         it('should not update a user with an existing email', function(done) {
             chai.request(app)
                 .put('/api/user')
@@ -360,6 +383,7 @@ describe('Tests', function() {
                     done();
                 });
         });
+
         it('should not update a user with an existing username', function(done) {
             chai.request(app)
                 .put('/api/user')
@@ -374,6 +398,7 @@ describe('Tests', function() {
                 });
         });
     });
+
     describe('GET /api/profiles/:username', function() {
         it('should get user one profile with auth', function(done) {
             chai.request(app)
@@ -388,6 +413,7 @@ describe('Tests', function() {
                     done();
                 });
         });
+
         it('should get user two profile with auth', function(done) {
             chai.request(app)
                 .get('/api/profiles/test2updated')
@@ -401,6 +427,7 @@ describe('Tests', function() {
                     done();
                 });
         });
+
         it('should not get a profile with invalid username', function(done) {
             chai.request(app)
                 .get('/api/profiles/@#$%')
@@ -411,6 +438,7 @@ describe('Tests', function() {
                     done();
                 });
         });
+
         it('should not get a profile with a non-existent username', function(done) {
             chai.request(app)
                 .get('/api/profiles/nonexistent')
@@ -422,6 +450,7 @@ describe('Tests', function() {
                 });
         });
     });
+
     describe('POST /api/profiles/:username/follow', function() {
         it('should follow user two', function(done) {
             chai.request(app)
@@ -436,6 +465,7 @@ describe('Tests', function() {
                     done();
                 });
         });
+
         it('should not follow user two again', function(done) {
             chai.request(app)
                 .post('/api/profiles/test2updated/follow')
@@ -449,6 +479,7 @@ describe('Tests', function() {
                     done();
                 });
         });
+
         it('should check if user one is following user two', function(done) {
             chai.request(app)
                 .get('/api/profiles/test2updated')
@@ -462,6 +493,7 @@ describe('Tests', function() {
                     done();
                 });
         });
+
         it('check if following is false with no auth', function(done) {
             chai.request(app)
                 .get('/api/profiles/test2updated')
@@ -474,6 +506,7 @@ describe('Tests', function() {
                     done();
                 });
         });
+
         it('should not follow a profile with invalid username', function(done) {
             chai.request(app)
                 .post('/api/profiles/#$%*))(/follow')
@@ -484,6 +517,7 @@ describe('Tests', function() {
                     done();
                 });
         });
+
         it('should not follow a profile with a non-existent username', function(done) {
             chai.request(app)
                 .post('/api/profiles/nonexistent/follow')
@@ -495,6 +529,7 @@ describe('Tests', function() {
                 });
         });
     });
+
     describe('DELETE /api/profiles/:username/follow', function() {
         it('should unfollow user two', function(done) {
             chai.request(app)
@@ -509,6 +544,7 @@ describe('Tests', function() {
                     done();
                 });
         });
+
         it('should not unfollow user two again', function(done) {
             chai.request(app)
                 .delete('/api/profiles/test2updated/follow')
@@ -522,6 +558,7 @@ describe('Tests', function() {
                     done();
                 });
         });
+
         it('should check if user one is not following user two', function(done) {
             chai.request(app)
                 .get('/api/profiles/test2updated')
