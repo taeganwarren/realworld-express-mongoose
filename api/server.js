@@ -1,5 +1,6 @@
 // Imports
 import express from 'express';
+import helmet from 'helmet';
 import connect_to_database from '../utils/mongodb.js';
 import v1_router from './routes/router.js';
 
@@ -9,6 +10,7 @@ const app = express();
 
 // Middleware
 app.use(express.json());
+app.use(helmet());
 app.use(v1_router);
 app.use('*', (req, res) => {
     res.status(404).json({

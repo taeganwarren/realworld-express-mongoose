@@ -134,7 +134,6 @@ async function delete_article(id, slug) {
     });
     // Return success
     return {
-        'success': 'Article deleted'
     };
 }
 
