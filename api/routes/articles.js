@@ -69,7 +69,35 @@ articles_router.get('/articles/:slug', verify_token(false), (req, res) => {
 
 // PUT api/articles/:slug
 articles_router.put('/articles/:slug', verify_token(true), (req, res) => {
-
+    // Get fields from request
+    const {
+        id 
+    } = req.user;
+    const {
+        slug 
+    } = req.params;
+    const {
+        title, description, body, tag_list 
+    } = req.body;
+    // Update article
+    update_article(id, slug, title, description, body, tag_list)
+        .then((response) => {
+            if (response['auth error']) {
+                res.status(401).json(response);
+            } else if (response['not found error']) {
+                res.status(404).json(response);
+            } else if (response['validation error']) {
+                res.status(422).json(response);
+            } else {
+                res.status(200).json(response);
+            }
+        })
+        .catch((error) => {
+            console.log(error);
+            res.status(500).json({
+                'server error': 'Failed to update article. Internal server error.' 
+            });
+        });
 });
 
 // DELETE api/articles/:slug
