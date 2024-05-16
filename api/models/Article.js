@@ -14,7 +14,7 @@ const article_schema = new Schema({
     },
     title: {
         type: String,
-        required: true,
+        required: 'Title is required',
         validate: {
             validator: (title) => {
                 return validator.isLength(title, {
@@ -26,7 +26,7 @@ const article_schema = new Schema({
     },
     description: {
         type: String,
-        required: true,
+        required: 'Description is required',
         validate: {
             validator: (description) => {
                 return validator.isLength(description, {
@@ -38,7 +38,7 @@ const article_schema = new Schema({
     },
     body: {
         type: String,
-        required: true,
+        required: 'Body is required',
         validate: {
             validator: (body) => {
                 return validator.isLength(body, {

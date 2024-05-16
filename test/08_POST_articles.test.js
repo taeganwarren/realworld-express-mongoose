@@ -12,7 +12,7 @@ describe('POST /api/articles', function() {
             .send({
                 title: 'Test Article',
                 description: 'Test Description',
-                body: 'Test Body',
+                body: 'My first test article!',
                 tag_list: ['test', 'testtwo']
             })
             .end(function(err, res) {
@@ -20,7 +20,7 @@ describe('POST /api/articles', function() {
                 expect(res.body.article).to.have.property('slug');
                 expect(res.body.article.title).to.equal('Test Article');
                 expect(res.body.article.description).to.equal('Test Description');
-                expect(res.body.article.body).to.equal('Test Body');
+                expect(res.body.article.body).to.equal('My first test article!');
                 expect(res.body.article.tag_list).to.eql(['test', 'testtwo']);
                 expect(res.body.article).to.have.property('created_at');
                 expect(res.body.article).to.have.property('updated_at');
@@ -43,7 +43,7 @@ describe('POST /api/articles', function() {
             .send({
                 title: 'Test Article',
                 description: 'Test Description',
-                body: 'Test Body',
+                body: 'My second test article!',
                 tag_list: ['test', 'testtwo']
             })
             .end(function(err, res) {
@@ -51,7 +51,7 @@ describe('POST /api/articles', function() {
                 expect(res.body.article).to.have.property('slug');
                 expect(res.body.article.title).to.equal('Test Article');
                 expect(res.body.article.description).to.equal('Test Description');
-                expect(res.body.article.body).to.equal('Test Body');
+                expect(res.body.article.body).to.equal('My second test article!');
                 expect(res.body.article.tag_list).to.eql(['test', 'testtwo']);
                 expect(res.body.article).to.have.property('created_at');
                 expect(res.body.article).to.have.property('updated_at');
@@ -79,6 +79,39 @@ describe('POST /api/articles', function() {
             .end(function(err, res) {
                 expect(res).to.have.status(401);
                 expect(res.body['auth error']).to.equal('No token provided');
+                done();
+            });
+    });
+
+    it('should not create an article without a title', function(done) {
+        test_data.chai.request(app)
+            .post('/api/articles')
+            .set('Authorization', `Token ${test_data.user_one_token}`)
+            .send({
+                description: 'Test Description',
+                body: 'Test Body',
+                tag_list: ['test', 'testtwo']
+            })
+            .end(function(err, res) {
+                expect(res).to.have.status(422);
+                expect(res.body['validation error']).to.include('Title is required');
+                done();
+            });
+    });
+
+    it('should not create an article with a title that is too long', function(done) {
+        test_data.chai.request(app)
+            .post('/api/articles')
+            .set('Authorization', `Token ${test_data.user_one_token}`)
+            .send({
+                title: 'a'.repeat(101),
+                description: 'Test Description',
+                body: 'Test Body',
+                tag_list: ['test', 'testtwo']
+            })
+            .end(function(err, res) {
+                expect(res).to.have.status(422);
+                expect(res.body['validation error']).to.include('Title must be between 1 and 100 characters long and contain only ASCII characters');
                 done();
             });
     });
