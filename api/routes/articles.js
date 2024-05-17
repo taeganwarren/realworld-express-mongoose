@@ -4,6 +4,7 @@ import {
 } from 'express';
 import verify_token from '../middlewares/verify_token.js';
 import {
+    get_articles,
     create_article,
     get_article,
     update_article,
@@ -12,6 +13,34 @@ import {
 
 // Constants
 const articles_router = Router();
+
+// GET /api/articles
+// TODO: handle optional query arguments
+articles_router.get('/articles', verify_token(false), (req, res) => {
+    // Get fields from request
+    const {
+        id 
+    } = req.user;
+    // Optional filters
+    const {
+        tag,
+        author,
+        favorited,
+        offset,
+        limit
+    } = req.query;
+    // Get articles
+    get_articles(id)
+        .then((response) => {
+            res.status(200).json(response);
+        })
+        .catch((error) => {
+            console.log(error);
+            res.status(500).json({
+                'server error': 'Failed to get articles. Internal server error.' 
+            });
+        });
+});
 
 // POST api/articles
 articles_router.post('/articles', verify_token(true), (req, res) => {

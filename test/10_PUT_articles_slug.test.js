@@ -14,7 +14,7 @@ describe('PUT /api/articles/:slug', function() {
                 title: 'Updated Test Article',
                 description: 'Updated Test Description',
                 body: 'My updated first test article!',
-                tag_list: ['test', 'testtwo']
+                tag_list: ['test', 'testtwo', 'testthreeupdate']
             })
             .end(function(err, res) {
                 expect(res).to.have.status(200);
@@ -22,7 +22,7 @@ describe('PUT /api/articles/:slug', function() {
                 expect(res.body.article.title).to.equal('Updated Test Article');
                 expect(res.body.article.description).to.equal('Updated Test Description');
                 expect(res.body.article.body).to.equal('My updated first test article!');
-                expect(res.body.article.tag_list).to.eql(['test', 'testtwo']);
+                expect(res.body.article.tag_list).to.eql(['test', 'testtwo', 'testthreeupdate']);
                 expect(res.body.article).to.have.property('created_at');
                 expect(res.body.article).to.have.property('updated_at');
                 expect(res.body.article.favorited).to.equal(false);

@@ -6,6 +6,50 @@ import {
     format_validation_errors 
 } from '../../utils/helpers.js';
 
+// Get articles globally
+async function get_articles(id) {
+    // Find articles
+    const articles = await Article.find().sort({
+        created_at: -1 
+    }).limit(20);
+    // Populate author field
+    for (let i = 0; i < articles.length; i++) {
+        await articles[i].populate('author');
+    }
+    // For each article, check if user is following author or has favorited article
+    // TODO: maybe only make this run if we have a user id
+    for (let i = 0; i < articles.length; i++) {
+        let is_following = false;
+        let is_favorited = false;
+        if (id) {
+            const user = await User.findById(id);
+            is_following = User.check_following(user.following, articles[i].author._id);
+            is_favorited = User.check_favorited(user.favorites, articles[i]._id);
+        }
+        articles[i] = {
+            slug: articles[i].slug,
+            title: articles[i].title,
+            description: articles[i].description,
+            body: articles[i].body,
+            tag_list: articles[i].tag_list,
+            created_at: articles[i].created_at,
+            updated_at: articles[i].updated_at,
+            favorited: is_favorited,
+            favorites_count: articles[i].favorites_count,
+            author: {
+                username: articles[i].author.username,
+                bio: articles[i].author.bio,
+                image: articles[i].author.image,
+                following: is_following
+            }
+        };
+    }
+    // Return articles
+    return {
+        articles: articles 
+    };
+}
+
 // Create article
 async function create_article(id, title, description, body, tag_list) {
     // Validate input
@@ -197,6 +241,7 @@ async function delete_article(id, slug) {
 }
 
 export {
+    get_articles,
     create_article,
     get_article,
     update_article,

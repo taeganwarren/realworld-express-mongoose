@@ -106,6 +106,21 @@ user_schema.statics.check_following = function(following, id) {
     return following.includes(id);
 };
 
+// Favorite and unfavorite articles
+user_schema.methods.favorite = function(id) {
+    if (!this.favorites.includes(id)) {
+        this.favorites.push(id);
+    }
+};
+user_schema.methods.unfavorite = function(id) {
+    if (this.favorites.includes(id)) {
+        this.favorites.pull(id);
+    }
+};
+user_schema.statics.check_favorited = function(favorites, id) {
+    return favorites.includes(id);
+};
+
 // User model
 const User = model('User', user_schema);
 
