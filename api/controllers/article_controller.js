@@ -2,6 +2,7 @@
 import Article from '../models/Article.js';
 import validator from 'validator';
 import User from '../models/User.js';
+import Tag from '../models/Tag.js';
 import {
     format_validation_errors 
 } from '../../utils/helpers.js';
@@ -16,8 +17,8 @@ async function get_articles(id) {
     for (let i = 0; i < articles.length; i++) {
         await articles[i].populate('author');
     }
+    // TODO: populate tags
     // For each article, check if user is following author or has favorited article
-    // TODO: maybe only make this run if we have a user id
     for (let i = 0; i < articles.length; i++) {
         let is_following = false;
         let is_favorited = false;
@@ -57,15 +58,35 @@ async function create_article(id, title, description, body, tag_list) {
         title: title,
         description: description,
         body: body,
-        tag_list: tag_list,
+        tag_list: [],
         author: id
     });
     try {
-        await new_article.validate(['title', 'description', 'body', 'tag_list']);
+        await new_article.validate(['title', 'description', 'body']);
     } catch (error) {
         return {
             'validation error': format_validation_errors(error.errors) 
         };
+    }
+    // Add tags
+    for (let tag of tag_list) {
+        if (!(await Tag.exists(tag))) {
+            const new_tag = new Tag({
+                name: tag 
+            });
+            try {
+                await new_tag.validate(['name']);
+            } catch (error) {
+                return {
+                    'validation error': format_validation_errors(error.errors) 
+                };
+            }
+            await new_tag.save();
+            new_article.tag_list.push(new_tag._id);
+        } else {
+            const tag_id = await Tag.findOne({ name: tag });
+            new_article.tag_list.push(tag_id._id);
+        }
     }
     // Save article
     await new_article.save();
@@ -78,7 +99,7 @@ async function create_article(id, title, description, body, tag_list) {
             title: new_article.title,
             description: new_article.description,
             body: new_article.body,
-            tag_list: new_article.tag_list,
+            tag_list: tag_list,
             created_at: new_article.created_at,
             updated_at: new_article.updated_at,
             favorited: false,
@@ -112,6 +133,8 @@ async function get_article(id, slug) {
             'not found error': 'Article not found' 
         };
     }
+    // Populate tags
+    await article.populate('tag_list');
     // Populate author field
     await article.populate('author');
     // Check if user is following author
@@ -127,7 +150,7 @@ async function get_article(id, slug) {
             title: article.title,
             description: article.description,
             body: article.body,
-            tag_list: article.tag_list,
+            tag_list: article.tag_list.map((tag) => tag.name),
             created_at: article.created_at,
             updated_at: article.updated_at,
             favorited: false,
@@ -169,6 +192,8 @@ async function update_article(id, slug, title, description, body, tag_list) {
     if (body) {
         article.body = body;
     }
+    // TODO: Tags need to be saved separately in a tags collection
+        // Check if the tags exist before creating new ones
     if (tag_list) {
         article.tag_list = tag_list;
     }

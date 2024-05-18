@@ -4,6 +4,7 @@ import {
 } from 'mongoose';
 import validator from 'validator';
 import slugify from 'slugify';
+import Tag from './Tag.js';
 
 // Article schema
 const article_schema = new Schema({
@@ -49,18 +50,10 @@ const article_schema = new Schema({
         }
     },
     tag_list: {
-        type: [String],
-        default: [],
-        validate: {
-            validator: (tag_list) => {
-                return tag_list.every((tag) => {
-                    return validator.isLength(tag, {
-                        min: 1, max: 20 
-                    }) && validator.isAlpha(tag);
-                });
-            },
-            message: 'Tags must be between 1 and 20 characters long and contain only letters'
-        }
+        type: [{
+            type: Schema.Types.ObjectId, ref: 'Tag' 
+        }],
+        default: []
     },
     created_at: {
         type: Date,
@@ -83,6 +76,7 @@ const article_schema = new Schema({
 // Pre save hook
 article_schema.pre('save', function(next) {
     if (this.isNew) {
+        // Generate slug
         this._id = new Types.ObjectId();
         this.slug = slugify(this.title, {
             lower: true 
