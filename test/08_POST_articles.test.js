@@ -5,6 +5,7 @@ import app from '../api/server.js';
 import test_data from './test_data.js';
 
 describe('POST /api/articles', function() {
+
     it('should create an article', function(done) {
         test_data.chai.request(app)
             .post('/api/articles')
