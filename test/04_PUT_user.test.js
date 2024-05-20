@@ -11,14 +11,16 @@ describe('PUT /api/user', function() {
             .put('/api/user')
             .set('Authorization', `Token ${test_data.user_one_token}`)
             .send({
-                email: 'test1updated@test.com',
-                password: 'Pa$$w0rd1#_updated'
+                user: {
+                    email: 'test1updated@test.com',
+                    password: 'Pa$$w0rd1#_updated'
+                }
             })
             .end(function(err, res) {
                 expect(res).to.have.status(200);
                 expect(res.body.user.email).to.equal('test1updated@test.com');
                 expect(res.body.user).to.have.property('token');
-                expect(res.body.user.username).to.equal('test1');
+                expect(res.body.user.username).to.equal('testuserone');
                 expect(res.body.user.bio).to.equal('');
                 expect(res.body.user.image).to.equal('');
                 done();
@@ -30,10 +32,12 @@ describe('PUT /api/user', function() {
             .put('/api/user')
             .set('Authorization', `Token ${test_data.user_two_token}`)
             .send({
-                email: 'test2updated@test.com',
-                username: 'test2updated',
-                bio: 'test2 bio',
-                image: 'test2 image'
+                user: {
+                    email: 'test2updated@test.com',
+                    username: 'test2updated',
+                    bio: 'test2 bio',
+                    image: 'test2 image'
+                }
             })
             .end(function(err, res) {
                 expect(res).to.have.status(200);
@@ -50,14 +54,16 @@ describe('PUT /api/user', function() {
         test_data.chai.request(app)
             .post('/api/users/login')
             .send({
-                email: 'test1updated@test.com',
-                password: 'Pa$$w0rd1#_updated'
+                user: {
+                    email: 'test1updated@test.com',
+                    password: 'Pa$$w0rd1#_updated'
+                }
             })
             .end(function(err, res) {
                 expect(res).to.have.status(200);
                 expect(res.body.user.email).to.equal('test1updated@test.com');
                 expect(res.body.user).to.have.property('token');
-                expect(res.body.user.username).to.equal('test1');
+                expect(res.body.user.username).to.equal('testuserone');
                 expect(res.body.user.bio).to.equal('');
                 expect(res.body.user.image).to.equal('');
                 test_data.user_one_token = res.body.user.token;
@@ -70,9 +76,11 @@ describe('PUT /api/user', function() {
             .put('/api/user')
             .set('Authorization', `Token ${test_data.user_one_token}`)
             .send({
-                email: 'test1',
-                username: 'test1@#$%',
-                password: 'password'
+                user: {
+                    email: 'test1',
+                    username: 'test1@#$%',
+                    password: 'password'
+                }
             })
             .end(function(err, res) {
                 expect(res).to.have.status(422);
@@ -88,9 +96,11 @@ describe('PUT /api/user', function() {
             .put('/api/user')
             .set('Authorization', `Token ${test_data.user_one_token}`)
             .send({
-                email: 1,
-                username: 1,
-                password: 1
+                user: {
+                    email: 1,
+                    username: 1,
+                    password: 1
+                }
             })
             .end(function(err, res) {
                 expect(res).to.have.status(422);
@@ -105,7 +115,9 @@ describe('PUT /api/user', function() {
         test_data.chai.request(app)
             .put('/api/user')
             .send({
-                email: 'test1updatedupdated@test.com'
+                user: {
+                    email: 'test1updatedupdated@test.com'
+                }
             })
             .end(function(err, res) {
                 expect(res).to.have.status(401);
@@ -119,7 +131,9 @@ describe('PUT /api/user', function() {
             .put('/api/user')
             .set('Authorization', `Token ${test_data.user_one_token}`)
             .send({
-                email: 'test2updated@test.com'
+                user: {
+                    email: 'test2updated@test.com'
+                }
             })
             .end(function(err, res) {
                 expect(res).to.have.status(422);
@@ -133,7 +147,9 @@ describe('PUT /api/user', function() {
             .put('/api/user')
             .set('Authorization', `Token ${test_data.user_one_token}`)
             .send({
-                username: 'test2updated'
+                user: {
+                    username: 'test2updated'
+                }
             })
             .end(function(err, res) {
                 expect(res).to.have.status(422);

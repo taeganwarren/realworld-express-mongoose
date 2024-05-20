@@ -4,6 +4,7 @@ import {
 import app from '../api/server.js';
 import User from '../api/models/User.js';
 import Article from '../api/models/Article.js';
+import Tag from '../api/models/Tag.js';
 import test_data from './test_data.js';
 
 describe('POST /api/users', function() {
@@ -11,20 +12,23 @@ describe('POST /api/users', function() {
     before(async function() {
         await User.deleteMany();
         await Article.deleteMany();
+        await Tag.deleteMany();
     });
         
     it('should create user one', function(done) {
         test_data.chai.request(app)
             .post('/api/users')
             .send({
-                email: 'test1@test.com',
-                password: 'Pa$$w0rd1#',
-                username: 'test1'
+                user: {
+                    email: 'testuserone@email.com',
+                    username: 'testuserone',
+                    password: 'Pa$$w0rd1!'
+                }
             })
             .end(function(err, res) {
                 expect(res).to.have.status(201);
-                expect(res.body.user.email).to.equal('test1@test.com');
-                expect(res.body.user.username).to.equal('test1');
+                expect(res.body.user.email).to.equal('testuserone@email.com');
+                expect(res.body.user.username).to.equal('testuserone');
                 expect(res.body.user).to.have.property('token');
                 test_data.user_one_token = res.body.user.token;
                 done();
@@ -35,14 +39,16 @@ describe('POST /api/users', function() {
         test_data.chai.request(app)
             .post('/api/users')
             .send({
-                email: 'test2@test.com',
-                password: 'Pa$$w0rd2#',
-                username: 'test2'
+                user: {
+                    email: 'testusertwo@email.com',
+                    username: 'testusertwo',
+                    password: 'Pa$$w0rd2!'
+                }
             })
             .end(function(err, res) {
                 expect(res).to.have.status(201);
-                expect(res.body.user.email).to.equal('test2@test.com');
-                expect(res.body.user.username).to.equal('test2');
+                expect(res.body.user.email).to.equal('testusertwo@email.com');
+                expect(res.body.user.username).to.equal('testusertwo');
                 expect(res.body.user).to.have.property('token');
                 test_data.user_two_token = res.body.user.token;
                 done();
@@ -53,9 +59,11 @@ describe('POST /api/users', function() {
         test_data.chai.request(app)
             .post('/api/users')
             .send({
-                email: 'test1@test.com',
-                password: 'Pa$$w0rd1#',
-                username: 'test1'
+                user: {
+                    email: 'testuserone@email.com',
+                    username: 'testuserone',
+                    password: 'Pa$$w0rd1!'
+                }
             })
             .end(function(err, res) {
                 expect(res).to.have.status(422);
@@ -69,9 +77,11 @@ describe('POST /api/users', function() {
         test_data.chai.request(app)
             .post('/api/users')
             .send({
-                email: 'test1',
-                password: 'password',
-                username: 'test1'
+                user: {
+                    email: 'testuserone',
+                    username: 'testuserone',
+                    password: 'password'
+                }
             })
             .end(function(err, res) {
                 expect(res).to.have.status(422);
@@ -85,9 +95,11 @@ describe('POST /api/users', function() {
         test_data.chai.request(app)
             .post('/api/users')
             .send({
-                email: 1,
-                password: 1,
-                username: 1
+                user: {
+                    email: 1,
+                    username: 1,
+                    password: 1
+                }
             })
             .end(function(err, res) {
                 expect(res).to.have.status(422);

@@ -10,7 +10,6 @@ const tag_schema = new Schema({
     name: {
         type: String,
         required: 'Name is required',
-        unique: true,
         validate: {
             validator: (name) => {
                 return validator.isLength(name, {

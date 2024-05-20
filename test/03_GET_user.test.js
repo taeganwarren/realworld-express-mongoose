@@ -12,9 +12,9 @@ describe('GET /api/user', function() {
             .set('Authorization', `Token ${test_data.user_one_token}`)
             .end(function(err, res) {
                 expect(res).to.have.status(200);
-                expect(res.body.user.email).to.equal('test1@test.com');
+                expect(res.body.user.email).to.equal('testuserone@email.com');
                 expect(res.body.user).to.have.property('token');
-                expect(res.body.user.username).to.equal('test1');
+                expect(res.body.user.username).to.equal('testuserone');
                 expect(res.body.user.bio).to.equal('');
                 expect(res.body.user.image).to.equal('');
                 done();
@@ -27,9 +27,9 @@ describe('GET /api/user', function() {
             .set('Authorization', `Token ${test_data.user_two_token}`)
             .end(function(err, res) {
                 expect(res).to.have.status(200);
-                expect(res.body.user.email).to.equal('test2@test.com');
+                expect(res.body.user.email).to.equal('testusertwo@email.com');
                 expect(res.body.user).to.have.property('token');
-                expect(res.body.user.username).to.equal('test2');
+                expect(res.body.user.username).to.equal('testusertwo');
                 expect(res.body.user.bio).to.equal('');
                 expect(res.body.user.image).to.equal('');
                 done();

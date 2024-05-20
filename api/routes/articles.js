@@ -51,9 +51,15 @@ articles_router.post('/articles', verify_token(true), (req, res) => {
     const {
         id 
     } = req.user;
+    if (!req.body.article) {
+        res.status(422).json({
+            'validation error': 'Article object is required.' 
+        });
+        return;
+    }
     const {
         title, description, body, tag_list 
-    } = req.body;
+    } = req.body.article;
     // Create article
     create_article(id, title, description, body, tag_list)
         .then((response) => {
@@ -108,9 +114,15 @@ articles_router.put('/articles/:slug', verify_token(true), (req, res) => {
     const {
         slug 
     } = req.params;
+    if (!req.body.article) {
+        res.status(422).json({
+            'validation error': 'Article object is required.' 
+        });
+        return;
+    }
     const {
         title, description, body, tag_list 
-    } = req.body;
+    } = req.body.article;
     // Update article
     update_article(id, slug, title, description, body, tag_list)
         .then((response) => {

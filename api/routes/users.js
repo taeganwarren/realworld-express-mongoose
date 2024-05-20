@@ -16,9 +16,15 @@ const users_router = Router();
 // POST api/users
 users_router.post('/users', (req, res) => {
     // Get fields from request
+    if (!req.body.user) {
+        res.status(422).json({
+            'validation error': 'User object is required.' 
+        });
+        return;
+    }
     const {
         email, username, password 
-    } = req.body;
+    } = req.body.user;
     // Create user
     create_user(email, username, password)
         .then((response) => {
@@ -39,9 +45,15 @@ users_router.post('/users', (req, res) => {
 // POST api/users/login
 users_router.post('/users/login', (req, res) => {
     // Get fields from request
+    if (!req.body.user) {
+        res.status(422).json({
+            'validation error': 'User object is required.' 
+        });
+        return;
+    }
     const {
         email, password 
-    } = req.body;
+    } = req.body.user;
     // Login user
     login_user(email, password)
         .then((response) => {
@@ -84,12 +96,18 @@ users_router.get('/user', verify_token(true), (req, res) => {
 // PUT api/user
 users_router.put('/user', verify_token(true), (req, res) => {
     // Get fields from request
+    if (!req.body.user) {
+        res.status(422).json({
+            'validation error': 'User object is required.' 
+        });
+        return;
+    }
     const {
         id, token 
     } = req.user;
     const {
         email, username, password, bio, image 
-    } = req.body;
+    } = req.body.user;
     // Update user
     update_user(id, email, username, password, bio, image)
         .then((response) => {

@@ -11,111 +11,112 @@ import {
 // TODO: Use pagination
 // TODO: Maybe use separate validation functions I made
 async function get_articles(id, options) {
-    // Validate tag and add to query
-    let query = {
-    };
-    let errors = { 'validation error': [] };
-    if (options.tag) {
-        if (validator.isLength(options.tag, {
-            min: 1, max: 100 
-        }) && validator.isAlpha(options.tag)) {
-            query.tag_list = {
-                $elemMatch: {
-                    name: options.tag 
-                } 
-            };
-        } else {
-            errors['validation error'].push('Invalid tag');
-        }
-    }
-    // Validate author and add to query
-    if (options.author) {
-        if (validator.isLength(options.author, {
-            min: 1, max: 100 
-        }) && validator.isAlphanumeric(options.author)) {
-            const user_id = await User.findOne({
-                username: options.author 
-            });
-            query.author = user_id._id;
-        } else {
-            errors['validation error'].push('Invalid author');
-        }
-    }
-    // Validate favorited and add to query
-    if (options.favorited) {
-        if (validator.isLength(options.favorited, {
-            min: 1, max: 100 
-        }) && validator.isAlphanumeric(options.favorited)) {
-            const user_favorites = await User.findOne({
-                username: options.favorited 
-            });
-            query._id = {
-                $in: user_favorites.favorites 
-            };
-        } else {
-            errors['validation error'].push('Invalid favorited');
-        }
-    }
-    // Validate offset
-    if (options.offset) {
-        if (!validator.isInt(options.offset)) {
-            errors['validation error'].push('Invalid offset');
-        }
-    } else {
-        options.offset = 0;
-    }
-    // Validate limit
-    if (options.limit) {
-        if (!validator.isInt(options.limit)) {
-            errors['validation error'].push('Invalid limit');
-        }
-    } else {
-        options.limit = 20;
-    }
-    // Return validation errors
-    if (errors['validation error'].length > 0) {
-        return errors;
-    }
-    // Find articles
-    const articles = await Article.find(query).sort({
-        created_at: -1 
-    }).limit(options.limit).skip(options.offset).populate('author');
-    // For each article, check if user is following author or has favorited article
-    let user;
-    if (id) {
-        user = await User.findById(id);
-    }
-    for (let i = 0; i < articles.length; i++) {
-        let is_following = false;
-        let is_favorited = false;
-        if (id) {
-            is_following = User.check_following(user.following, articles[i].author._id);
-            is_favorited = User.check_favorited(user.favorites, articles[i]._id);
-        }
-        articles[i] = {
-            slug: articles[i].slug,
-            title: articles[i].title,
-            description: articles[i].description,
-            body: articles[i].body,
-            tag_list: articles[i].tag_list.map((tag) => {
-                return tag.name;
-            }),
-            created_at: articles[i].created_at,
-            updated_at: articles[i].updated_at,
-            favorited: is_favorited,
-            favorites_count: articles[i].favorites_count,
-            author: {
-                username: articles[i].author.username,
-                bio: articles[i].author.bio,
-                image: articles[i].author.image,
-                following: is_following
-            }
-        };
-    }
-    // Return articles
-    return {
-        articles: articles 
-    };
+    return {};
+    // // Validate tag and add to query
+    // let query = {
+    // };
+    // let errors = { 'validation error': [] };
+    // if (options.tag) {
+    //     if (validator.isLength(options.tag, {
+    //         min: 1, max: 100 
+    //     }) && validator.isAlpha(options.tag)) {
+    //         query.tag_list = {
+    //             $elemMatch: {
+    //                 name: options.tag 
+    //             } 
+    //         };
+    //     } else {
+    //         errors['validation error'].push('Invalid tag');
+    //     }
+    // }
+    // // Validate author and add to query
+    // if (options.author) {
+    //     if (validator.isLength(options.author, {
+    //         min: 1, max: 100 
+    //     }) && validator.isAlphanumeric(options.author)) {
+    //         const user_id = await User.findOne({
+    //             username: options.author 
+    //         });
+    //         query.author = user_id._id;
+    //     } else {
+    //         errors['validation error'].push('Invalid author');
+    //     }
+    // }
+    // // Validate favorited and add to query
+    // if (options.favorited) {
+    //     if (validator.isLength(options.favorited, {
+    //         min: 1, max: 100 
+    //     }) && validator.isAlphanumeric(options.favorited)) {
+    //         const user_favorites = await User.findOne({
+    //             username: options.favorited 
+    //         });
+    //         query._id = {
+    //             $in: user_favorites.favorites 
+    //         };
+    //     } else {
+    //         errors['validation error'].push('Invalid favorited');
+    //     }
+    // }
+    // // Validate offset
+    // if (options.offset) {
+    //     if (!validator.isInt(options.offset)) {
+    //         errors['validation error'].push('Invalid offset');
+    //     }
+    // } else {
+    //     options.offset = 0;
+    // }
+    // // Validate limit
+    // if (options.limit) {
+    //     if (!validator.isInt(options.limit)) {
+    //         errors['validation error'].push('Invalid limit');
+    //     }
+    // } else {
+    //     options.limit = 20;
+    // }
+    // // Return validation errors
+    // if (errors['validation error'].length > 0) {
+    //     return errors;
+    // }
+    // // Find articles
+    // const articles = await Article.find(query).sort({
+    //     created_at: -1 
+    // }).limit(options.limit).skip(options.offset).populate('author');
+    // // For each article, check if user is following author or has favorited article
+    // let user;
+    // if (id) {
+    //     user = await User.findById(id);
+    // }
+    // for (let i = 0; i < articles.length; i++) {
+    //     let is_following = false;
+    //     let is_favorited = false;
+    //     if (id) {
+    //         is_following = User.check_following(user.following, articles[i].author._id);
+    //         is_favorited = User.check_favorited(user.favorites, articles[i]._id);
+    //     }
+    //     articles[i] = {
+    //         slug: articles[i].slug,
+    //         title: articles[i].title,
+    //         description: articles[i].description,
+    //         body: articles[i].body,
+    //         tag_list: articles[i].tag_list.map((tag) => {
+    //             return tag.name;
+    //         }),
+    //         created_at: articles[i].created_at,
+    //         updated_at: articles[i].updated_at,
+    //         favorited: is_favorited,
+    //         favorites_count: articles[i].favorites_count,
+    //         author: {
+    //             username: articles[i].author.username,
+    //             bio: articles[i].author.bio,
+    //             image: articles[i].author.image,
+    //             following: is_following
+    //         }
+    //     };
+    // }
+    // // Return articles
+    // return {
+    //     articles: articles 
+    // };
 }
 
 // Create article

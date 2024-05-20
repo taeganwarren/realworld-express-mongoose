@@ -8,11 +8,11 @@ describe('GET /api/profiles/:username', function() {
     
     it('should get user one profile with auth', function(done) {
         test_data.chai.request(app)
-            .get('/api/profiles/test1')
+            .get('/api/profiles/testuserone')
             .set('Authorization', `Token ${test_data.user_one_token}`)
             .end(function(err, res) {
                 expect(res).to.have.status(200);
-                expect(res.body.profile.username).to.equal('test1');
+                expect(res.body.profile.username).to.equal('testuserone');
                 expect(res.body.profile.bio).to.equal('');
                 expect(res.body.profile.image).to.equal('');
                 expect(res.body.profile.following).to.equal(false);

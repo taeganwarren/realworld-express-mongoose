@@ -10,14 +10,16 @@ describe('POST /api/users/login', function() {
         test_data.chai.request(app)
             .post('/api/users/login')
             .send({
-                email: 'test1@test.com',
-                password: 'Pa$$w0rd1#'
+                user: {
+                    email: 'testuserone@email.com',
+                    password: 'Pa$$w0rd1!'
+                }
             })
             .end(function(err, res) {
                 expect(res).to.have.status(200);
-                expect(res.body.user.email).to.equal('test1@test.com');
+                expect(res.body.user.email).to.equal('testuserone@email.com');
                 expect(res.body.user).to.have.property('token');
-                expect(res.body.user.username).to.equal('test1');
+                expect(res.body.user.username).to.equal('testuserone');
                 expect(res.body.user.bio).to.equal('');
                 expect(res.body.user.image).to.equal('');
                 test_data.user_one_token = res.body.user.token;
@@ -29,14 +31,16 @@ describe('POST /api/users/login', function() {
         test_data.chai.request(app)
             .post('/api/users/login')
             .send({
-                email: 'test2@test.com',
-                password: 'Pa$$w0rd2#'
+                user: {
+                    email: 'testusertwo@email.com',
+                    password: 'Pa$$w0rd2!'
+                }
             })
             .end(function(err, res) {
                 expect(res).to.have.status(200);
-                expect(res.body.user.email).to.equal('test2@test.com');
+                expect(res.body.user.email).to.equal('testusertwo@email.com');
                 expect(res.body.user).to.have.property('token');
-                expect(res.body.user.username).to.equal('test2');
+                expect(res.body.user.username).to.equal('testusertwo');
                 expect(res.body.user.bio).to.equal('');
                 expect(res.body.user.image).to.equal('');
                 test_data.user_two_token = res.body.user.token;
@@ -48,8 +52,10 @@ describe('POST /api/users/login', function() {
         test_data.chai.request(app)
             .post('/api/users/login')
             .send({
-                email: 'test3@test.com',
-                password: 'Pa$$w0rd3#'
+                user: {
+                    email: 'test3@test.com',
+                    password: 'Pa$$w0rd3#'
+                }
             })
             .end(function(err, res) {
                 expect(res).to.have.status(401);
@@ -62,8 +68,10 @@ describe('POST /api/users/login', function() {
         test_data.chai.request(app)
             .post('/api/users/login')
             .send({
-                email: 'test1',
-                password: 'password'
+                user: {
+                    email: 'test1',
+                    password: 'password'
+                }
             })
             .end(function(err, res) {
                 expect(res).to.have.status(422);
@@ -77,8 +85,10 @@ describe('POST /api/users/login', function() {
         test_data.chai.request(app)
             .post('/api/users/login')
             .send({
-                email: 1,
-                password: 1
+                user: {
+                    email: 1,
+                    password: 1
+                }
             })
             .end(function(err, res) {
                 expect(res).to.have.status(422);
@@ -92,7 +102,9 @@ describe('POST /api/users/login', function() {
         test_data.chai.request(app)
             .post('/api/users/login')
             .send({
-                email: 'test1@test.com'
+                user: {
+                    email: 'test1@test.com'
+                }
             })
             .end(function(err, res) {
                 expect(res).to.have.status(422);
