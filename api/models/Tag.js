@@ -24,8 +24,17 @@ const tag_schema = new Schema({
 
 // Check if tag exists
 tag_schema.statics.exists = async function(name) {
-    return await this.findOne({ name: name });
-}
+    return await this.findOne({
+        name: name 
+    });
+};
+
+// Validate tag
+tag_schema.statics.validate_tag = function(name) {
+    return validator.isLength(name, {
+        min: 1, max: 20 
+    }) && validator.isAlpha(name);
+};
 
 // Tag model
 const Tag = model('Tag', tag_schema);

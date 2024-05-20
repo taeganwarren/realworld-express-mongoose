@@ -91,6 +91,20 @@ user_schema.methods.compare_password = async function(password) {
     return await bcrypt.compare(password, this.password);
 };
 
+// Check if user exists
+user_schema.statics.exists_username = async function(username) {
+    return await this.findOne({
+        username: username 
+    });
+};
+
+// Validate username
+user_schema.statics.validate_username = function(username) {
+    return validator.isLength(username, {
+        min: 4 
+    }) && validator.isAlphanumeric(username);
+};
+
 // Follow and unfollow profiles
 user_schema.methods.follow = function(id) {
     if (!this.following.includes(id)) {

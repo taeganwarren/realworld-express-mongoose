@@ -15,24 +15,27 @@ import {
 const articles_router = Router();
 
 // GET /api/articles
-// TODO: handle optional query arguments
 articles_router.get('/articles', verify_token(false), (req, res) => {
     // Get fields from request
     const {
         id 
     } = req.user;
     // Optional filters
-    const {
-        tag,
-        author,
-        favorited,
-        offset,
-        limit
-    } = req.query;
+    const options = {
+        tag: req.query.tag,
+        author: req.query.author,
+        favorited: req.query.favorited,
+        offset: req.query.offset,
+        limit: req.query.limit
+    };
     // Get articles
-    get_articles(id)
+    get_articles(id, options)
         .then((response) => {
-            res.status(200).json(response);
+            if (response['validation error']) {
+                res.status(422).json(response);
+            } else {
+                res.status(200).json(response);
+            }
         })
         .catch((error) => {
             console.log(error);

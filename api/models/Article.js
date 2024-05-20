@@ -50,9 +50,7 @@ const article_schema = new Schema({
         }
     },
     tag_list: {
-        type: [{
-            type: Schema.Types.ObjectId, ref: 'Tag' 
-        }],
+        type: [Tag.schema],
         default: []
     },
     created_at: {
