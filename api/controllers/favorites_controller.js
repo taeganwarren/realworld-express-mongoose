@@ -9,7 +9,7 @@ async function favorite_article(id, slug) {
     // Find article
     const article = await Article.findOne({
         slug: slug 
-    });
+    }).populate('author');
     // Check if article exists
     if (!article) {
         return {
@@ -18,8 +18,10 @@ async function favorite_article(id, slug) {
     }
     // Favorite article
     user.favorite(article._id);
-    // Save user
     await user.save();
+    // Increase article favorites count
+    article.favorites_count++;
+    await article.save();
     // Return article
     return {
         article: {
@@ -28,13 +30,13 @@ async function favorite_article(id, slug) {
             description: article.description,
             body: article.body,
             tag_list: article.tag_list,
-            favorited: true,
+            favorited: user.check_favorited(article._id),
             favorites_count: article.favorites_count,
             author: {
                 username: article.author.username,
                 bio: article.author.bio,
                 image: article.author.image,
-                following: user.is_following(article.author._id) 
+                following: user.check_following(article.author._id) 
             }
         }
     };
@@ -56,8 +58,10 @@ async function unfavorite_article(id, slug) {
     }
     // Unfavorite article
     user.unfavorite(article._id);
-    // Save user
     await user.save();
+    // Decrease article favorites count
+    article.favorites_count--;
+    await article.save();
     // Return article
     return {
         article: {
@@ -66,13 +70,13 @@ async function unfavorite_article(id, slug) {
             description: article.description,
             body: article.body,
             tag_list: article.tag_list,
-            favorited: false,
+            favorited: user.check_favorited(article._id),
             favorites_count: article.favorites_count,
             author: {
                 username: article.author.username,
                 bio: article.author.bio,
                 image: article.author.image,
-                following: user.is_following(article.author._id) 
+                following: user.check_following(article.author._id) 
             }
         }
     };

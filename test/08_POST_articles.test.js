@@ -107,6 +107,7 @@ describe('POST /api/articles', function() {
             })
             .end(function(err, res) {
                 expect(res).to.have.status(201);
+                test_data.article_four_slug = res.body.article.slug;
                 done();
             });
     });
@@ -125,6 +126,7 @@ describe('POST /api/articles', function() {
             })
             .end(function(err, res) {
                 expect(res).to.have.status(201);
+                test_data.article_five_slug = res.body.article.slug;
                 done();
             });
     });
@@ -143,6 +145,7 @@ describe('POST /api/articles', function() {
             })
             .end(function(err, res) {
                 expect(res).to.have.status(201);
+                test_data.article_six_slug = res.body.article.slug;
                 done();
             });
     });
@@ -161,6 +164,7 @@ describe('POST /api/articles', function() {
             })
             .end(function(err, res) {
                 expect(res).to.have.status(201);
+                test_data.article_seven_slug = res.body.article.slug;
                 done();
             });
     });
@@ -179,6 +183,7 @@ describe('POST /api/articles', function() {
             })
             .end(function(err, res) {
                 expect(res).to.have.status(201);
+                test_data.article_eight_slug = res.body.article.slug;
                 done();
             });
     });

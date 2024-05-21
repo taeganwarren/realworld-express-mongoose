@@ -6,4 +6,7 @@ import test_data from './test_data.js';
 
 describe('GET /tags', () => {
 
+    it('should not run tests', (done) => {
+        done();
+    });
 });

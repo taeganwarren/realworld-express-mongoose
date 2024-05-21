@@ -67,7 +67,7 @@ describe('POST /api/profiles/:username/follow', function() {
             .set('Authorization', `Token ${test_data.user_one_token}`)
             .end(function(err, res) {
                 expect(res).to.have.status(404);
-                expect(res.body['error']).to.equal('not found');
+                expect(res.body['not found error']).to.equal('Resource not found.');
                 done();
             });
     });

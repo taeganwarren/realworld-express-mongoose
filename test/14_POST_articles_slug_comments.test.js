@@ -6,4 +6,7 @@ import test_data from './test_data.js';
 
 describe('POST /articles/:slug/comments', () => {
 
+    it('should not run tests', (done) => {
+        done();
+    });
 });

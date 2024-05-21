@@ -116,8 +116,8 @@ user_schema.methods.unfollow = function(id) {
         this.following.pull(id);
     }
 };
-user_schema.statics.check_following = function(following, id) {
-    return following.includes(id);
+user_schema.methods.check_following = function(id) {
+    return this.following.includes(id);
 };
 
 // Favorite and unfavorite articles
@@ -131,8 +131,8 @@ user_schema.methods.unfavorite = function(id) {
         this.favorites.pull(id);
     }
 };
-user_schema.statics.check_favorited = function(favorites, id) {
-    return favorites.includes(id);
+user_schema.methods.check_favorited = function(id) {
+    return this.favorites.includes(id);
 };
 
 // User model

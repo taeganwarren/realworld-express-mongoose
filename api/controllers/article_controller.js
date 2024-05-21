@@ -10,6 +10,7 @@ import {
 // Get articles globally with optional filters
 // TODO: Use pagination
 // TODO: Maybe use separate validation functions I made
+// TODO: Allow for multiple tags
 async function get_articles(id, options) {
     let query = {
     };
