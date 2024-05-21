@@ -4,6 +4,7 @@ import {
 } from 'express';
 import verify_token from '../middlewares/verify_token.js';
 import {
+    get_feed,
     get_articles,
     create_article,
     get_article,
@@ -13,6 +14,30 @@ import {
 
 // Constants
 const articles_router = Router();
+
+// GET /api/articles/feed
+articles_router.get('/articles/feed', verify_token(true), (req, res) => {
+    // Get fields from request
+    const {
+        id 
+    } = req.user;
+    // Optional filters
+    const options = {
+        offset: req.query.offset,
+        limit: req.query.limit
+    };
+    // Get feed
+    get_feed(id, options)
+        .then((response) => {
+            res.status(200).json(response);
+        })
+        .catch((error) => {
+            console.log(error);
+            res.status(500).json({
+                'server error': 'Failed to get feed. Internal server error.' 
+            });
+        });
+});
 
 // GET /api/articles
 articles_router.get('/articles', verify_token(false), (req, res) => {

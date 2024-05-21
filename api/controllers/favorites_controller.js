@@ -29,7 +29,9 @@ async function favorite_article(id, slug) {
             title: article.title,
             description: article.description,
             body: article.body,
-            tag_list: article.tag_list.map(tag => tag.name),
+            tag_list: article.tag_list.map((tag) => {
+                return tag.name;
+            }),
             created_at: article.created_at,
             updated_at: article.updated_at,
             favorited: user.check_favorited(article._id),
@@ -71,7 +73,9 @@ async function unfavorite_article(id, slug) {
             title: article.title,
             description: article.description,
             body: article.body,
-            tag_list: article.tag_list.map(tag => tag.name),
+            tag_list: article.tag_list.map((tag) => {
+                return tag.name;
+            }),
             created_at: article.created_at,
             updated_at: article.updated_at,
             favorited: user.check_favorited(article._id),

@@ -4,9 +4,9 @@ import {
 import app from '../api/server.js';
 import test_data from './test_data.js';
 
-describe('GET /articles/:slug', () => {
+describe('GET /articles/:slug', function() {
 
-    it('should return a single article', async () => {
+    it('should return a single article', async function() {
         test_data.chai.request(app)
             .get(`/api/articles/${test_data.article_one_slug}`)
             .end((err, res) => {
@@ -28,9 +28,9 @@ describe('GET /articles/:slug', () => {
             });
     });
 
-    it('should return 404 for non-existent article', async () => {
+    it('should return 404 for non-existent article', async function() {
         test_data.chai.request(app)
-            .get(`/api/articles/nonexistent`)
+            .get('/api/articles/nonexistent')
             .end((err, res) => {
                 expect(res).to.have.status(404);
             });

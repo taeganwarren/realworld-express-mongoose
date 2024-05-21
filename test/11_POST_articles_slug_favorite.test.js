@@ -4,9 +4,9 @@ import {
 import app from '../api/server.js';
 import test_data from './test_data.js';
 
-describe('POST /articles/:slug/favorite', () => {
+describe('POST /articles/:slug/favorite', function() {
 
-    it('should favorite an article', (done) => {
+    it('should favorite an article', function(done) {
         test_data.chai.request(app)
             .post(`/api/articles/${test_data.article_five_slug}/favorite`)
             .set('Authorization', `Token ${test_data.user_one_token}`)

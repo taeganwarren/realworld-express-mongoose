@@ -4,9 +4,9 @@ import {
 import app from '../api/server.js';
 import test_data from './test_data.js';
 
-describe('DELETE /articles/:slug/favorite', () => {
+describe('DELETE /articles/:slug/favorite', function() {
 
-    it('should unfavorite an article', (done) => {
+    it('should unfavorite an article', function(done) {
         test_data.chai.request(app)
             .delete(`/api/articles/${test_data.article_five_slug}/favorite`)
             .set('Authorization', `Token ${test_data.user_one_token}`)

@@ -7,6 +7,65 @@ import {
     format_validation_errors 
 } from '../../utils/helpers.js';
 
+// Get a users feed
+async function get_feed(id, options) {
+    // Validate offset
+    if ((options.offset && !validator.isInt(options.offset)) || !options.offset) {
+        options.offset = 0;
+    }
+    // Validate limit
+    if ((options.limit && !validator.isInt(options.limit)) || !options.limit) {
+        options.limit = 20;
+    }
+    // Find user
+    const user = await User.findById(id);
+    if (!user) {
+        return {
+            'not found error': 'User not found' 
+        };
+    }
+    // Get articles from following users
+    const articles = await Article.find({
+        author: {
+            $in: user.following
+        }
+    })
+        .sort({
+            created_at: -1 
+        })
+        .limit(options.limit)
+        .skip(options.offset)
+        .populate('author');
+    // For each article, check if user is following author or has favorited article
+    for (let i = 0; i < articles.length; i++) {
+        let is_following = user.check_following(articles[i].author._id);
+        let is_favorited = user.check_favorited(articles[i]._id);
+        articles[i] = {
+            slug: articles[i].slug,
+            title: articles[i].title,
+            description: articles[i].description,
+            body: articles[i].body,
+            tag_list: articles[i].tag_list.map((tag) => {
+                return tag.name;
+            }),
+            created_at: articles[i].created_at,
+            updated_at: articles[i].updated_at,
+            favorited: is_favorited,
+            favorites_count: articles[i].favorites_count,
+            author: {
+                username: articles[i].author.username,
+                bio: articles[i].author.bio,
+                image: articles[i].author.image,
+                following: is_following
+            }
+        };
+    }
+    // Return articles
+    return {
+        articles: articles 
+    };
+}
+
 // Get articles globally with optional filters
 // TODO: Use pagination
 // TODO: Maybe use separate validation functions I made
@@ -69,19 +128,11 @@ async function get_articles(id, options) {
         }
     }
     // Validate offset
-    if (options.offset) {
-        if (!validator.isInt(options.offset)) {
-            errors['validation error'].push('Invalid offset');
-        }
-    } else {
+    if ((options.offset && !validator.isInt(options.offset)) || !options.offset) {
         options.offset = 0;
     }
     // Validate limit
-    if (options.limit) {
-        if (!validator.isInt(options.limit)) {
-            errors['validation error'].push('Invalid limit');
-        }
-    } else {
+    if ((options.limit && !validator.isInt(options.limit)) || !options.limit) {
         options.limit = 20;
     }
     // Return validation errors
@@ -187,7 +238,9 @@ async function create_article(id, title, description, body, tag_list) {
             title: new_article.title,
             description: new_article.description,
             body: new_article.body,
-            tag_list: new_article.tag_list.map(tag => tag.name),
+            tag_list: new_article.tag_list.map((tag) => {
+                return tag.name;
+            }),
             created_at: new_article.created_at,
             updated_at: new_article.updated_at,
             favorited: false,
@@ -386,6 +439,7 @@ async function delete_article(id, slug) {
 }
 
 export {
+    get_feed,
     get_articles,
     create_article,
     get_article,

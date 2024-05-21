@@ -4,9 +4,9 @@ import {
 import app from '../api/server.js';
 import test_data from './test_data.js';
 
-describe('GET /tags', () => {
+describe('GET /tags', function() {
 
-    it('should not run tests', (done) => {
+    it('should not run tests', function(done) {
         done();
     });
 });
