@@ -58,7 +58,7 @@ async function follow_profile(id, username) {
     // Follow profile
     const user = await User.findById(id);
     user.follow(profile._id);
-    const following = User.check_following(user.following, profile._id);
+    const following = user.check_following(profile._id);
     // Save user
     await user.save();
     // Return profile
@@ -92,7 +92,7 @@ async function unfollow_profile(id, username) {
     // Unfollow profile
     const user = await User.findById(id);
     user.unfollow(profile._id);
-    const following = User.check_following(user.following, profile._id);
+    const following = user.check_following(profile._id);
     // Save user
     await user.save();
     // Return profile

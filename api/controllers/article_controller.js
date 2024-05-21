@@ -101,8 +101,8 @@ async function get_articles(id, options) {
         let is_following = false;
         let is_favorited = false;
         if (id) {
-            is_following = User.check_following(user.following, articles[i].author._id);
-            is_favorited = User.check_favorited(user.favorites, articles[i]._id);
+            is_following = user.check_following(articles[i].author._id);
+            is_favorited = user.check_favorited(articles[i]._id);
         }
         articles[i] = {
             slug: articles[i].slug,
@@ -223,11 +223,13 @@ async function get_article(id, slug) {
     }
     // Populate author field
     await article.populate('author');
-    // Check if user is following author
+    // Check if user is following author or has favorited article
     let is_following = false;
+    let is_favorited = false;
     if (id) {
         const user = await User.findById(id);
-        is_following = User.check_following(user.following, article.author._id);
+        is_following = user.check_following(article.author._id);
+        is_favorited = user.check_favorited(article._id);
     }
     // Return article
     return {
@@ -241,8 +243,8 @@ async function get_article(id, slug) {
             }),
             created_at: article.created_at,
             updated_at: article.updated_at,
-            favorited: false,
-            favorites_count: 0,
+            favorited: is_favorited,
+            favorites_count: article.favorites_count,
             author: {
                 username: article.author.username,
                 bio: article.author.bio,
