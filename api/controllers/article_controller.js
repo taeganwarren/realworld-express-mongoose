@@ -11,12 +11,13 @@ import {
 // TODO: Use pagination
 // TODO: Maybe use separate validation functions I made
 async function get_articles(id, options) {
-    // Validate tag and add to query
     let query = {
     };
     let errors = {
-        'validation error': [] 
+        'validation error': [],
+        'not found error': []
     };
+    // Validate tag and add to query
     if (options.tag) {
         if (validator.isLength(options.tag, {
             min: 1, max: 100 
@@ -38,7 +39,11 @@ async function get_articles(id, options) {
             const user_id = await User.findOne({
                 username: options.author 
             });
-            query.author = user_id._id;
+            if (!user_id) {
+                errors['not found error'].push('Author not found');
+            } else {
+                query.author = user_id._id;
+            }
         } else {
             errors['validation error'].push('Invalid author');
         }
@@ -51,9 +56,13 @@ async function get_articles(id, options) {
             const user_favorites = await User.findOne({
                 username: options.favorited 
             });
-            query._id = {
-                $in: user_favorites.favorites 
-            };
+            if (!user_favorites) {
+                errors['not found error'].push('User not found');
+            } else {
+                query._id = {
+                    $in: user_favorites.favorites 
+                };
+            }
         } else {
             errors['validation error'].push('Invalid favorited');
         }
@@ -138,6 +147,9 @@ async function create_article(id, title, description, body, tag_list) {
         };
     }
     // Add tags
+    if (!tag_list) {
+        tag_list = [];
+    }
     for (let tag of tag_list) {
         if (!(await Tag.exists(tag))) {
             const new_tag = new Tag({
@@ -174,7 +186,7 @@ async function create_article(id, title, description, body, tag_list) {
             title: new_article.title,
             description: new_article.description,
             body: new_article.body,
-            tag_list: tag_list,
+            tag_list: new_article.tag_list.map(tag => tag.name),
             created_at: new_article.created_at,
             updated_at: new_article.updated_at,
             favorited: false,

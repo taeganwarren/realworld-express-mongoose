@@ -12,10 +12,10 @@ describe('GET /articles/:slug', () => {
             .end((err, res) => {
                 expect(res).to.have.status(200);
                 expect(res.body.article).to.have.property('slug');
-                expect(res.body.article.title).to.equal('Test Article');
-                expect(res.body.article.description).to.equal('Test Description');
-                expect(res.body.article.body).to.equal('My first test article!');
-                expect(res.body.article.tag_list).to.eql(['test', 'testone']);
+                expect(res.body.article.title).to.equal('Understanding REST APIs');
+                expect(res.body.article.description).to.equal('Learn the essentials of RESTful APIs.');
+                expect(res.body.article.body).to.equal('REST APIs allow systems to communicate over the internet. This post explains how they work and how to create one.');
+                expect(res.body.article.tag_list).to.eql(['APIs', 'WebDevelopment', 'REST']);
                 expect(res.body.article).to.have.property('created_at');
                 expect(res.body.article).to.have.property('updated_at');
                 expect(res.body.article.favorited).to.equal(false);

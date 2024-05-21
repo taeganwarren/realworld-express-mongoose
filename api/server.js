@@ -14,7 +14,7 @@ app.use(helmet());
 app.use(v1_router);
 app.use('*', (req, res) => {
     res.status(404).json({
-        'error': 'not found' 
+        'not found error': 'Resource not found.' 
     });
 });
 

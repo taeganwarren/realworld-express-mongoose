@@ -12,19 +12,19 @@ describe('PUT /api/articles/:slug', function() {
             .set('Authorization', `Token ${test_data.user_one_token}`)
             .send({
                 article: {
-                    title: 'Updated Test Article',
-                    description: 'Updated Test Description',
-                    body: 'My updated first test article!',
-                    tag_list: ['test', 'testtwo', 'testthreeupdate']
+                    title: 'Understanding Algorithms and Complexity',
+                    description: 'Explore the basics of algorithms and their complexities.',
+                    body: 'Algorithms are the heart of computer science. This post introduces key concepts and explains how to analyze algorithmic complexity.',
+                    tag_list: ['Algorithms', 'Programming', 'Complexity']
                 }
             })
             .end(function(err, res) {
                 expect(res).to.have.status(200);
                 expect(res.body.article).to.have.property('slug');
-                expect(res.body.article.title).to.equal('Updated Test Article');
-                expect(res.body.article.description).to.equal('Updated Test Description');
-                expect(res.body.article.body).to.equal('My updated first test article!');
-                expect(res.body.article.tag_list).to.eql(['test', 'testtwo', 'testthreeupdate']);
+                expect(res.body.article.title).to.equal('Understanding Algorithms and Complexity');
+                expect(res.body.article.description).to.equal('Explore the basics of algorithms and their complexities.');
+                expect(res.body.article.body).to.equal('Algorithms are the heart of computer science. This post introduces key concepts and explains how to analyze algorithmic complexity.');
+                expect(res.body.article.tag_list).to.eql(['Algorithms', 'Programming', 'Complexity']);
                 expect(res.body.article).to.have.property('created_at');
                 expect(res.body.article).to.have.property('updated_at');
                 expect(res.body.article.favorited).to.equal(false);

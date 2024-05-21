@@ -13,5 +13,6 @@ export default {
     user_one_token: '',
     user_two_token: '',
     article_one_slug: '',
-    article_two_slug: ''
+    article_two_slug: '',
+    article_three_slug: ''
 };
