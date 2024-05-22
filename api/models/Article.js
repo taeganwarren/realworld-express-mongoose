@@ -5,6 +5,7 @@ import {
 import validator from 'validator';
 import slugify from 'slugify';
 import Tag from './Tag.js';
+import Comment from './Comment.js';
 
 // Article schema
 const article_schema = new Schema({
@@ -51,6 +52,10 @@ const article_schema = new Schema({
     },
     tag_list: {
         type: [Tag.schema],
+        default: []
+    },
+    comments: {
+        type: [Comment.schema],
         default: []
     },
     created_at: {
