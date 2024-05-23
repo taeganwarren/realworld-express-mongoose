@@ -2,6 +2,7 @@
 import {
     Schema, Types, model 
 } from 'mongoose';
+import validator from 'validator';
 
 // Comment schema
 const comment_schema = new Schema({
@@ -18,7 +19,7 @@ const comment_schema = new Schema({
             message: 'Body must be between 1 and 250 characters long and contain only ASCII characters'
         }
     },
-    author_id: {
+    author: {
         type: Schema.Types.ObjectId,
         ref: 'User',
         required: 'Author ID is required'
