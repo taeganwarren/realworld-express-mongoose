@@ -2,6 +2,7 @@
 import Article from '../models/Article.js';
 import User from '../models/User.js';
 import Comment from '../models/Comment.js';
+import validator from 'validator';
 import {
     format_validation_errors 
 } from '../../utils/helpers.js';
@@ -41,7 +42,8 @@ async function get_comments(id, slug) {
             }
             return {
                 id: comment._id,
-                created_at: comment.created_at,
+                createdAt: comment.created_at,
+                updatedAt: comment.updated_at,
                 body: comment.body,
                 author: {
                     username: comment.author.username,
@@ -55,14 +57,14 @@ async function get_comments(id, slug) {
 }
 
 // Create comment
-async function create_comment(id, slug, comment_data) {
+async function create_comment(id, slug, comment_body) {
     // Validate input
     const comment = new Comment({
-        body: comment_data.body,
+        body: comment_body.body,
         author: id
     });
     try {
-        await comment.validate(['body']);
+        await comment.validate();
     } catch (error) {
         console.log(error);
         return format_validation_errors(error);
@@ -83,7 +85,8 @@ async function create_comment(id, slug, comment_data) {
     return {
         comment: {
             id: comment._id,
-            created_at: comment.created_at,
+            createdAt: comment.created_at,
+            updatedAt: comment.updated_at,
             body: comment.body,
             author: {
                 username: comment.author.username,

@@ -9,7 +9,6 @@ const comment_schema = new Schema({
     id: Schema.Types.ObjectId,
     body: {
         type: String,
-        required: 'Body is required',
         validate: {
             validator: (body) => {
                 return validator.isLength(body, {
@@ -21,10 +20,13 @@ const comment_schema = new Schema({
     },
     author: {
         type: Schema.Types.ObjectId,
-        ref: 'User',
-        required: 'Author ID is required'
+        ref: 'User'
     },
     created_at: {
+        type: Date,
+        default: Date.now
+    },
+    updated_at: {
         type: Date,
         default: Date.now
     }

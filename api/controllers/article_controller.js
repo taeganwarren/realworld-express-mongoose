@@ -45,13 +45,13 @@ async function get_feed(id, options) {
             title: articles[i].title,
             description: articles[i].description,
             body: articles[i].body,
-            tag_list: articles[i].tag_list.map((tag) => {
+            tagList: articles[i].tag_list.map((tag) => {
                 return tag.name;
             }),
-            created_at: articles[i].created_at,
-            updated_at: articles[i].updated_at,
+            createdAt: articles[i].created_at,
+            updatedAt: articles[i].updated_at,
             favorited: is_favorited,
-            favorites_count: articles[i].favorites_count,
+            favoritesCount: articles[i].favorites_count,
             author: {
                 username: articles[i].author.username,
                 bio: articles[i].author.bio,
@@ -62,7 +62,8 @@ async function get_feed(id, options) {
     }
     // Return articles
     return {
-        articles: articles 
+        articles: articles,
+        articlesCount: articles.length
     };
 }
 
@@ -160,13 +161,13 @@ async function get_articles(id, options) {
             title: articles[i].title,
             description: articles[i].description,
             body: articles[i].body,
-            tag_list: articles[i].tag_list.map((tag) => {
+            tagList: articles[i].tag_list.map((tag) => {
                 return tag.name;
             }),
-            created_at: articles[i].created_at,
-            updated_at: articles[i].updated_at,
+            createdAt: articles[i].created_at,
+            updatedAt: articles[i].updated_at,
             favorited: is_favorited,
-            favorites_count: articles[i].favorites_count,
+            favoritesCount: articles[i].favorites_count,
             author: {
                 username: articles[i].author.username,
                 bio: articles[i].author.bio,
@@ -177,7 +178,8 @@ async function get_articles(id, options) {
     }
     // Return articles
     return {
-        articles: articles 
+        articles: articles,
+        articlesCount: articles.length
     };
 }
 
@@ -238,13 +240,13 @@ async function create_article(id, title, description, body, tag_list) {
             title: new_article.title,
             description: new_article.description,
             body: new_article.body,
-            tag_list: new_article.tag_list.map((tag) => {
+            tagList: new_article.tag_list.map((tag) => {
                 return tag.name;
             }),
-            created_at: new_article.created_at,
-            updated_at: new_article.updated_at,
+            createdAt: new_article.created_at,
+            updatedAt: new_article.updated_at,
             favorited: false,
-            favorites_count: 0,
+            favoritesCount: 0,
             author: {
                 username: new_article.author.username,
                 bio: new_article.author.bio,
@@ -291,13 +293,13 @@ async function get_article(id, slug) {
             title: article.title,
             description: article.description,
             body: article.body,
-            tag_list: article.tag_list.map((tag) => {
+            tagList: article.tag_list.map((tag) => {
                 return tag.name;
             }),
-            created_at: article.created_at,
-            updated_at: article.updated_at,
+            createdAt: article.created_at,
+            updatedAt: article.updated_at,
             favorited: is_favorited,
-            favorites_count: article.favorites_count,
+            favoritesCount: article.favorites_count,
             author: {
                 username: article.author.username,
                 bio: article.author.bio,
@@ -383,13 +385,13 @@ async function update_article(id, slug, title, description, body, tag_list) {
             title: article.title,
             description: article.description,
             body: article.body,
-            tag_list: article.tag_list.map((tag) => {
+            tagList: article.tag_list.map((tag) => {
                 return tag.name;
             }),
-            created_at: article.created_at,
-            updated_at: article.updated_at,
+            createdAt: article.created_at,
+            updatedAt: article.updated_at,
             favorited: false,
-            favorites_count: article.favorites_count,
+            favoritesCount: article.favorites_count,
             author: {
                 username: article.author.username,
                 bio: article.author.bio,

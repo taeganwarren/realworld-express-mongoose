@@ -29,13 +29,13 @@ async function favorite_article(id, slug) {
             title: article.title,
             description: article.description,
             body: article.body,
-            tag_list: article.tag_list.map((tag) => {
+            tagList: article.tag_list.map((tag) => {
                 return tag.name;
             }),
-            created_at: article.created_at,
-            updated_at: article.updated_at,
+            createdAt: article.created_at,
+            updatedAt: article.updated_at,
             favorited: user.check_favorited(article._id),
-            favorites_count: article.favorites_count,
+            favoritesCount: article.favorites_count,
             author: {
                 username: article.author.username,
                 bio: article.author.bio,
@@ -73,13 +73,13 @@ async function unfavorite_article(id, slug) {
             title: article.title,
             description: article.description,
             body: article.body,
-            tag_list: article.tag_list.map((tag) => {
+            tagList: article.tag_list.map((tag) => {
                 return tag.name;
             }),
-            created_at: article.created_at,
-            updated_at: article.updated_at,
+            createdAt: article.created_at,
+            updatedAt: article.updated_at,
             favorited: user.check_favorited(article._id),
-            favorites_count: article.favorites_count,
+            favoritesCount: article.favorites_count,
             author: {
                 username: article.author.username,
                 bio: article.author.bio,
