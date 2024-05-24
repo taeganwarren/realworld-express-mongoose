@@ -27,9 +27,9 @@ const user_schema = new Schema({
             validator: (username) => {
                 return validator.isLength(username, {
                     min: 4 
-                }) && validator.isAlphanumeric(username);
+                }) && validator.isAscii(username);
             },
-            message: 'Username must be at least 4 characters long and contain only letters and numbers'
+            message: 'Username must be at least 4 characters long and contain only ASCII characters'
         }
     },
     password: {
@@ -102,7 +102,7 @@ user_schema.statics.exists_username = async function(username) {
 user_schema.statics.validate_username = function(username) {
     return validator.isLength(username, {
         min: 4 
-    }) && validator.isAlphanumeric(username);
+    }) && validator.isAscii(username);
 };
 
 // Follow and unfollow profiles

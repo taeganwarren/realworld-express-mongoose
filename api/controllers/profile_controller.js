@@ -5,7 +5,7 @@ import User from '../models/User.js';
 // Get profile
 async function get_profile(id, username) {
     // Validate username
-    if (username.length < 4 && !validator.isAlphanumeric(username)) {
+    if (username.length < 4 && !validator.isAscii(username)) {
         return {
             'validation error': 'Username must be at least 4 characters long and contain only letters and numbers' 
         };
@@ -41,7 +41,7 @@ async function get_profile(id, username) {
 // Follow profile
 async function follow_profile(id, username) {
     // Validate username
-    if (username.length < 4 && !validator.isAlphanumeric(username)) {
+    if (username.length < 4 && !validator.isAscii(username)) {
         return {
             'validation error': 'Username must be at least 4 characters long and contain only letters and numbers' 
         };
@@ -75,7 +75,7 @@ async function follow_profile(id, username) {
 // Unfollow profile
 async function unfollow_profile(id, username) {
     // Validate username
-    if (username.length < 4 && !validator.isAlphanumeric(username)) {
+    if (username.length < 4 && !validator.isAscii(username)) {
         return {
             'validation error': 'Username must be at least 4 characters long and contain only letters and numbers' 
         };

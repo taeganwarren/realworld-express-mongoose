@@ -25,19 +25,25 @@ async function get_comments(id, slug) {
         };
     }
     // Find user
-    const user = await User.findById(id);
-    if (!user) {
-        return {
-            'not found error': 'User not found' 
-        };
+    let user;
+    if (id) {
+        user = await User.findById(id);
+        if (!user) {
+            return {
+                'not found error': 'User not found' 
+            };
+        }
     }
     // Populate comments
-    await article.populate('comments.author');
+    await article.populate('comments');
+    for (let comment of article.comments) {
+        await comment.populate('author');
+    }
     // Return comments
     return {
         comments: article.comments.map((comment) => {
             let is_following = false;
-            if (user.following.includes(comment.author._id)) {
+            if (id && user.following.includes(comment.author._id)) {
                 is_following = true;
             }
             return {
@@ -80,7 +86,6 @@ async function create_comment(id, slug, comment_body) {
     await comment.save();
     article.comments.push(comment._id);
     await article.save();
-    await comment.populate('author');
     // Return comment
     return {
         comment: {

@@ -96,7 +96,7 @@ async function get_articles(id, options) {
     if (options.author) {
         if (validator.isLength(options.author, {
             min: 1, max: 100 
-        }) && validator.isAlphanumeric(options.author)) {
+        }) && validator.isAscii(options.author)) {
             const user_id = await User.findOne({
                 username: options.author 
             });
@@ -113,7 +113,7 @@ async function get_articles(id, options) {
     if (options.favorited) {
         if (validator.isLength(options.favorited, {
             min: 1, max: 100 
-        }) && validator.isAlphanumeric(options.favorited)) {
+        }) && validator.isAscii(options.favorited)) {
             const user_favorites = await User.findOne({
                 username: options.favorited 
             });

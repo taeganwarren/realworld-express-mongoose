@@ -55,7 +55,9 @@ const article_schema = new Schema({
         default: []
     },
     comments: {
-        type: [Comment.schema],
+        type: [{
+            type: Schema.Types.ObjectId, ref: 'Comment'
+        }],
         default: []
     },
     created_at: {
